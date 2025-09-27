@@ -1,0 +1,53 @@
+.login-page {
+  background: #f9fafc;
+}
+
+.login-left {
+  background: #ffffff;
+}
+
+.login-card {
+  background: #fff;
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+}
+
+.login-right {
+  background: linear-gradient(135deg, #2563eb, #60a5fa);
+  color: #fff;
+}
+.login-card input {
+  border: 1px solid #e0e0e0;
+  padding: 12px 18px;
+  border-radius: 50px; /* arrondi */
+  transition: all 0.3s ease-in-out;
+}
+
+/* Ombre bleue permanente */
+.login-card input {
+  box-shadow: 0 0 6px rgba(37, 99, 235, 0.3);
+}
+
+/* Ombre bleue plus forte au focus */
+.login-card input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 12px rgba(37, 99, 235, 0.6);
+  outline: none;
+}
+
+.login-card {
+  background: #ffffff;
+  border-radius: 205px;
+  padding: 30px;
+  max-width: 400px;
+  transition: all 0.3s ease-in-out;
+  /* border:1px solid #2563eb; */
+  /* Ombre bleue par défaut */
+  box-shadow: 0 4px 15px rgba(37, 99, 235, 0.2);
+}
+
+/* Ombre plus marquée quand on survole la carte */
+.login-card:hover {
+  box-shadow: 0 8px 25px rgba(37, 99, 235, 0.35);
+}

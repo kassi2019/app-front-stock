@@ -1,0 +1,88 @@
+
+
+/* Header */
+.header {
+  background-color: #1e40af;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 150% !important;
+}
+
+.headerTitle {
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.logoutBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: white;
+}
+
+/* Section Title */
+.sectionTitle {
+  font-size: 16px;
+  font-weight: bold;
+  margin-left: 15px;
+  margin-top: 15px;
+  margin-bottom: 10px;
+  color: #111827;
+}
+
+/* Stat Cards */
+.statsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  gap: 15px;
+  padding: 0 30px;
+}
+
+.statCard {
+  background-color: white;
+  width: 25%;
+  aspect-ratio: 1 / 1; /* carré */
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+}
+
+.statNumber {
+  font-size: 18px;
+  font-weight: bold;
+  color: #1e40af;
+}
+
+.statLabel {
+  font-size: 16px;
+  color: #6b7280;
+  text-align: center;
+  margin-top: 8px;
+  font-weight: bold;
+}
+
+/* Floating Action Button */
+.fab {
+  position: fixed;
+  bottom: 30px;
+  right: 20px;
+  background-color: #2563eb;
+  width: 60px;
+  height: 60px;
+  border-radius: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.2);
+}

@@ -1,15 +1,52 @@
-import React from "react";
-import { Link,useParams  } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
 import MenuGestionStock from "./dossierMenu/menuGestionStock";
+import { useDispatch, useSelector } from "react-redux";
+import api from "../Service/axios";
+import { informationUtilisateur } from "../Service/login";
 
 function Sidebar() {
+  const dispatch = useDispatch();
+  const { stateAllUtilisateur } = useSelector((state) => state.login);
+  const [profileData, setProfileData] = useState({
+    nom_utilisateur: "",
+    noms_prenoms: "",
+    role_id: "",
+    matricule: "",
+    libelle_role: "",
+  });
+  const [photoPreview, setPhotoPreview] = useState("");
+  useEffect(() => {
+    dispatch(informationUtilisateur());
+  }, [dispatch]);
+  useEffect(() => {
+    if (stateAllUtilisateur) {
+      setProfileData({
+        noms_prenoms: stateAllUtilisateur.noms_prenoms || "",
+        nom_utilisateur: stateAllUtilisateur.nom_utilisateur || "",
+        role_id: stateAllUtilisateur?.role?.id || "",
+        matricule: stateAllUtilisateur.matricule || "",
+        libelle_role: stateAllUtilisateur?.role?.libelle || "",
+      });
+      setPhotoPreview(
+        stateAllUtilisateur.photoUrl
+          ? `${api.defaults.baseURL}${stateAllUtilisateur.photoUrl}`
+          : "https://via.placeholder.com/150"
+      );
+    }
+  }, [stateAllUtilisateur]);
+  const photoSrc = stateAllUtilisateur?.photoUrl
+    ? `${api.defaults.baseURL}${stateAllUtilisateur.photoUrl}`
+    : "https://via.placeholder.com/45"; // image par défaut si pas de photo
+
   const { module } = useParams();
+  // console.log("Module from Sidebar:", module);
   // const location = useLocation();
   // const { data } = location.state || {};
-console.log("Data in Sidebar:", module);
+
   return (
     <div>
-      <div className="theme-setting-wrapper">
+      {/* <div className="theme-setting-wrapper">
         <div id="settings-trigger">
           <i className="typcn typcn-cog-outline"></i>
         </div>
@@ -35,40 +72,50 @@ console.log("Data in Sidebar:", module);
             <div className="tiles default border"></div>
           </div>
         </div>
-      </div>
+      </div> */}
       <nav className="sidebar sidebar-offcanvas" id="sidebar">
         <ul className="nav">
           <li className="nav-item">
             <div className="d-flex sidebar-profile">
               <div className="sidebar-profile-image">
-                <img src="images/faces/face29.png" alt="image" />
-                <span className="sidebar-status-indicator"></span>
+                {/* <img src="images/faces/face29.png" alt="image" /> */}
+                {stateAllUtilisateur?.photoUrl === null ? (
+                  <img
+                    src={photoPreview}
+                    alt="image"
+                    style={{
+                      objectFit: "cover",
+                    }}
+                  />
+                ) : (
+                  <img
+                    src={photoSrc}
+                    alt="image"
+                    style={{
+                      objectFit: "cover",
+                    }}
+                  />
+                )}
               </div>
               <div className="sidebar-profile-name">
-                <p className="sidebar-name">Kenneth Osborne7</p>
-                <p className="sidebar-designation">Welcome</p>
+                <p
+                  className="sidebar-name"
+                  style={{ textTransform: "capitalize" }}
+                >
+                  {profileData?.noms_prenoms}
+                </p>
+                <p
+                  className="sidebar-name"
+                  style={{ fontSize: "12px", textAlign: "center" }}
+                >
+                  {profileData?.libelle_role}
+                </p>
               </div>
             </div>
-            {/* <div className="nav-search">
-              <div className="input-group">
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="Type to search..."
-                  aria-label="search"
-                  aria-describedby="search"
-                />
-                <div className="input-group-append">
-                  <span className="input-group-text" id="search">
-                    <i className="typcn typcn-zoom"></i>
-                  </span>
-                </div>
-              </div>
-            </div> */}
-            <p className="sidebar-menu-title">Dash menu</p>
+            {/* <p className="sidebar-menu-title">Dash menu</p> */}
           </li>
-          <MenuGestionStock />
-          {/* {data?.module === 1 && <MenuGestionStock />} */}
+          {/* <MenuGestionStock /> */}
+          {(module === "1" || module === "0") && <MenuGestionStock />}
         </ul>
       </nav>
     </div>

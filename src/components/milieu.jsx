@@ -48,9 +48,9 @@ const statCards = [
 
 export default function Accueil() {
   const navigate = useNavigate();
-  const radius = 300; // distance des cercles au centre
+  const radius = 250; // distance des cercles au centre
   const centerX = 300;
-  const centerY = 300;
+  const centerY = 280;
 
   return (
     <div className="d-flex flex-column align-items-center mt-5">

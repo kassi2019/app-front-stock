@@ -1,6 +1,9 @@
 import React from "react";
+//import { Link, useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 function MenuGestionStock() {
+  //const { module } = useParams();
+
   return (
     <div>
       <li className="nav-item">
@@ -20,21 +23,28 @@ function MenuGestionStock() {
           aria-controls="ui-basic"
         >
           <i className="typcn typcn-briefcase menu-icon"></i>
-          <span className="menu-title">UI Elements</span>
+          <span className="menu-title">Paramétre</span>
           <i className="typcn typcn-chevron-right menu-arrow"></i>
         </a>
         <div className="collapse" id="ui-basic">
           <ul className="nav flex-column sub-menu">
             <li className="nav-item">
-              {" "}
-              <a className="nav-link" href="pages/ui-features/buttons.html">
-                Buttons
+              <a
+                className="nav-link"
+                href="pages/ui-features/buttons.html"
+                style={{ fontWeight: "bold" }}
+              >
+                Fournisseur
               </a>
             </li>
             <li className="nav-item">
               {" "}
-              <a className="nav-link" href="pages/ui-features/dropdowns.html">
-                Dropdowns
+              <a
+                className="nav-link"
+                href="pages/ui-features/dropdowns.html"
+                style={{ fontWeight: "bold" }}
+              >
+                Utilisateur
               </a>
             </li>
             <li className="nav-item">
@@ -42,16 +52,6 @@ function MenuGestionStock() {
               <a className="nav-link" href="pages/ui-features/typography.html">
                 Typography
               </a>
-            </li>
-            <li className="nav-item">
-              <Link to="/produit" className="nav-link">
-                Produit
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link to="/listeProduitProvisoire" className="nav-link">
-                Produit Caissier
-              </Link>
             </li>
           </ul>
         </div>
@@ -65,15 +65,19 @@ function MenuGestionStock() {
           aria-controls="form-elements"
         >
           <i className="typcn typcn-film menu-icon"></i>
-          <span className="menu-title">Form elements</span>
+          <span className="menu-title">Menu Magasinier</span>
           <i className="menu-arrow"></i>
         </a>
         <div className="collapse" id="form-elements">
           <ul className="nav flex-column sub-menu">
             <li className="nav-item">
-              <a className="nav-link" href="pages/forms/basic_elements.html">
-                Basic Elements
-              </a>
+              <Link
+                to={`/produit/${1}`}
+                className="nav-link"
+                style={{ fontWeight: "bold" }}
+              >
+                Entrées de Stock
+              </Link>
             </li>
           </ul>
         </div>
@@ -87,16 +91,19 @@ function MenuGestionStock() {
           aria-controls="charts"
         >
           <i className="typcn typcn-chart-pie-outline menu-icon"></i>
-          <span className="menu-title">Charts</span>
+          <span className="menu-title">Menu Caissier</span>
           <i className="menu-arrow"></i>
         </a>
         <div className="collapse" id="charts">
           <ul className="nav flex-column sub-menu">
             <li className="nav-item">
-              {" "}
-              <a className="nav-link" href="pages/charts/chartjs.html">
-                ChartJs
-              </a>
+              <Link
+                to={`/listeProduitProvisoire/${1}`}
+                className="nav-link"
+                style={{ fontWeight: "bold" }}
+              >
+                Sorties de Stock
+              </Link>
             </li>
           </ul>
         </div>
@@ -110,16 +117,19 @@ function MenuGestionStock() {
           aria-controls="tables"
         >
           <i className="typcn typcn-th-small-outline menu-icon"></i>
-          <span className="menu-title">Tables</span>
+          <span className="menu-title">Menu Responsable</span>
           <i className="menu-arrow"></i>
         </a>
         <div className="collapse" id="tables">
           <ul className="nav flex-column sub-menu">
             <li className="nav-item">
-              {" "}
-              <a className="nav-link" href="pages/tables/basic-table.html">
-                Basic table
-              </a>
+              <Link
+                to={`/controleInventaire/${1}`}
+                className="nav-link"
+                style={{ fontWeight: "bold" }}
+              >
+                Inventaire
+              </Link>
             </li>
           </ul>
         </div>

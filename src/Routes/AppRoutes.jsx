@@ -9,6 +9,8 @@ import TableauBord from "../components/tableauBord";
 import Produit from "../pages/Produit/produit";
 import TbModuleStock from "../components/dossierTableauBord/TbModuleStock";
 import ListeProduitProvisoire from "../pages/dossierCaissier/listeProduitProvisoire";
+import FromProfil from "../pages/utilisateur/FromProfil";
+import ControleInventaire from "../pages/dossierResponsable/ControleInventaire";
 // import Principal from "../components/principal";
 // import PrincipalPlan from "../pages/PlanStructure/PrincipalPlan";
 // import Role from "../pages/gestionUtilisateur/role/role";
@@ -32,12 +34,15 @@ const AppRoutes = () => {
         <Route element={<Parent />}>
           {/* <Route path="accueil" element={<Milieu />} /> */}
           <Route path="tableauBord" element={<TableauBord />} />
-          <Route path="/produit" element={<Produit />} />
+          <Route path="/produit/:module" element={<Produit />} />
           <Route path="TbModuleStock/:module" element={<TbModuleStock />} />
+          {/* to={`/fromProfil/${module}`} */}
           <Route
-            path="listeProduitProvisoire"
+            path="listeProduitProvisoire/:module"
             element={<ListeProduitProvisoire />}
           />
+          <Route path="fromProfil/:module" element={<FromProfil />} />
+          <Route path="controleInventaire/:module" element={<ControleInventaire />} />
           {/* <Route path="structure" element={<Structure />} />
           <Route path="planStructure" element={<PrincipalPlan />} />
           <Route path="role" element={<Role />} />

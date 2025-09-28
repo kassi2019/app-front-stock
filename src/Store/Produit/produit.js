@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import {
   listeProduit,
   listeProduitProvisoire,
+  listeProduitInventaire,
   //   ajouterStructure,
   //   modifierStructure,
   //   supprimerStructure,
@@ -12,6 +13,7 @@ const produitSlice = createSlice({
   initialState: {
     stateProduit: [],
     stateProduitProvisoire: [],
+    stateProduitInventaire: [],
     optionsSelect: [],
     loading: false,
     error: null,
@@ -22,6 +24,14 @@ const produitSlice = createSlice({
       const produit = state.stateProduitProvisoire.find((p) => p.id === id);
       if (produit) {
         produit.quantite = quantite; // ✅ met bien à jour uniquement ce produit
+      }
+    },
+
+    updateQuantiteTheorie: (state, action) => {
+      const { id, quantite_theorique } = action.payload;
+      const produit = state.stateProduitInventaire.find((p) => p.id === id);
+      if (produit) {
+        produit.quantite_theorique = quantite_theorique; // ✅ met bien à jour uniquement ce produit
       }
     },
   },
@@ -62,6 +72,23 @@ const produitSlice = createSlice({
       .addCase(listeProduitProvisoire.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload.data;
+      })
+
+      .addCase(listeProduitInventaire.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(listeProduitInventaire.fulfilled, (state, action) => {
+        state.loading = false;
+        state.stateProduitInventaire = action.payload.map((p) => ({
+          ...p,
+          quantite: p.quantite ?? 0, // ✅ toujours un nombre
+        }));
+      })
+
+      .addCase(listeProduitInventaire.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload.data;
       });
     //  .addCase(modifierLotProduit.fulfilled, (state, action) => {
     //         const index = state.stateStructure.findIndex(
@@ -98,4 +125,5 @@ const produitSlice = createSlice({
   },
 });
 export const { updateQuantite } = produitSlice.actions;
+export const { updateQuantiteTheorie } = produitSlice.actions;
 export default produitSlice.reducer;

@@ -1,16 +1,30 @@
-import React from "react";
-
-function header() {
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, Navigate, useNavigate } from "react-router-dom";
+import { informationUtilisateur, logoutThunk } from "../Service/login";
+function Header() {
+  //const { module } = useParams();
+  const { stateAllUtilisateur } = useSelector((state) => state.login);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    dispatch(logoutThunk()).then(() => {
+      navigate("/login"); // Redirection après déconnexion
+    });
+  };
+   useEffect(() => {
+      dispatch(informationUtilisateur());
+    }, [dispatch]);
   return (
     <div>
       <nav className="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
         <div className="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
-          <a className="navbar-brand brand-logo" href="index.html">
+          {/* <a className="navbar-brand brand-logo" href="index.html">
             <img src="images/logo.svg" alt="logo" />
           </a>
           <a className="navbar-brand brand-logo-mini" href="index.html">
             <img src="images/logo-mini.svg" alt="logo" />
-          </a>
+          </a> */}
           <button
             className="navbar-toggler navbar-toggler align-self-center d-none d-lg-flex"
             type="button"
@@ -22,17 +36,29 @@ function header() {
         <div className="navbar-menu-wrapper d-flex align-items-center justify-content-end">
           <ul className="navbar-nav mr-lg-2">
             <li className="nav-item  d-none d-lg-flex">
-              <a className="nav-link" href="#">
-                Calendar
-              </a>
+              {/* <a className="nav-link" href="#">
+                Voir Module
+              </a> */}
+              <Link
+                to={`/accueil2`}
+                className="nav-link"
+                style={{ fontWeight: "bold" }}
+              >
+                Voir Module
+              </Link>
+            </li>
+
+            <li className="nav-item  d-none d-lg-flex">
+              <Link
+                to={`/fromProfil/${0}`}
+                className="nav-link"
+                style={{ fontWeight: "bold" }}
+              >
+                Mon Profil
+              </Link>
             </li>
             <li className="nav-item  d-none d-lg-flex">
-              <a className="nav-link active" href="#">
-                Statistic
-              </a>
-            </li>
-            <li className="nav-item  d-none d-lg-flex">
-              <a className="nav-link" href="#">
+              <a className="nav-link" href="#" style={{ fontWeight: "bold" }}>
                 Employee
               </a>
             </li>
@@ -186,20 +212,28 @@ function header() {
                 id="profileDropdown"
               >
                 <i className="typcn typcn-user-outline mr-0"></i>
-                <span className="nav-profile-name">Evan Morales</span>
+                <span
+                  className="nav-profile-name"
+                  style={{
+                    textTransform: "capitalize",
+                    color: "black",
+                    fontWeight: "bold",
+                  }}
+                >
+                  {stateAllUtilisateur?.noms_prenoms}
+                </span>
               </a>
               <div
                 className="dropdown-menu dropdown-menu-right navbar-dropdown"
                 aria-labelledby="profileDropdown"
               >
-                <a className="dropdown-item">
-                  <i className="typcn typcn-cog text-primary"></i>
-                  Settings
-                </a>
-                <a className="dropdown-item">
+                <Link to={`/fromProfil/${0}`} className="dropdown-item">
+                  <i className="typcn typcn-cog text-primary"></i> Mon Profil
+                </Link>
+                <Link onClick={handleLogout} className="dropdown-item">
                   <i className="typcn typcn-power text-primary"></i>
-                  Logout
-                </a>
+                  Déconnexion
+                </Link>
               </div>
             </li>
           </ul>
@@ -216,4 +250,4 @@ function header() {
   );
 }
 
-export default header;
+export default Header;

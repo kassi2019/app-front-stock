@@ -135,3 +135,43 @@ export const listeProduitProvisoire = createAsyncThunk(
     }
   }
 );
+
+
+export const listeProduitInventaire = createAsyncThunk(
+  "inventaire/inventaire",
+  async (_, thunkAPI) => {
+    try {
+      const res = await api.get("/produit/listeProduitInventaire"); // <-- adapte cette route à ton backend
+
+      return res.data; // On suppose que res.data contient la liste des structures
+    } catch (err) {
+      return thunkAPI.rejectWithValue(
+        err.response?.data || "Erreur lors de la récupération des produit"
+      );
+    }
+  }
+);
+
+
+
+
+
+
+export const mettreAJourQuantiteTheorique = createAsyncThunk(
+  "Theorique/Theorique",
+   
+  async ({ id, data }, thunkAPI) => {
+    
+     console.log("res.data", data);
+    try {
+      const res = await api.put(`/produit/mettreAJourQuantiteTheorique/${id}`, data);
+     
+      // thunkAPI.dispatch(afficherInformationLotParProduit(data?.idProduit));
+      return res.data; // Retourne la structure modifiée
+    } catch (err) {
+      return thunkAPI.rejectWithValue(
+        err.response?.data || "Erreur lors de la modification du lot"
+      );
+    }
+  }
+);

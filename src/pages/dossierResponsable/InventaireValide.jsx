@@ -4,44 +4,47 @@ import {
   messageSucces,
 } from "../../globalComponents/Notification.js";
 import {
-  listeProduitInventaire,
-  mettreAJourQuantiteTheorique,
+  listeProduitValide,
+  RamenerQuantiteTheorique,
 } from "../../Service/produit.js";
 import { useDispatch, useSelector } from "react-redux";
-// import { messageSucces } from "../../globalComponents/Notification.js";
-function ControleInventaire() {
+
+function InventaireValide() {
   const [expandedRows, setExpandedRows] = useState({});
-  const [stockTheorique, setStockTheorique] = useState({});
+  const [stockTheorique] = useState({});
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [selectedLotId, setSelectedLotId] = useState(null);
+
+  const openConfirm = (id) => {
+    setSelectedLotId(id);
+    setShowConfirm(true);
+  };
   const toggleRow = (idProduit) => {
     setExpandedRows((prev) => ({
       ...prev,
       [idProduit]: !prev[idProduit],
     }));
   };
-  const { stateProduitInventaire } = useSelector((state) => state.produits);
-  //const [data] = useState(inventaireData);
+  const { stateProduitValide } = useSelector((state) => state.produits);
   const dispatch = useDispatch();
+
   useEffect(() => {
-    dispatch(listeProduitInventaire());
+    dispatch(listeProduitValide());
   }, [dispatch]);
 
-  const handleStockChange = (lotId, systemStock, value) => {
-    const val = Number(value) || 0;
-    setStockTheorique((prev) => ({
-      ...prev,
-      [lotId]: {
-        theorique: val,
-        ecart: systemStock - val,
-      },
-    }));
-  };
+  // === Totaux globaux ===
   let globalSysteme = 0;
   let globalTheorique = 0;
   let globalEcart = 0;
-  stateProduitInventaire.forEach((item) => {
+
+  stateProduitValide.forEach((item) => {
     item.lots.forEach((lot) => {
-      const theorique = stockTheorique[lot.id]?.theorique || 0;
-      const ecart = stockTheorique[lot.id]?.ecart ?? 0 - lot.quantite;
+      // Stock théorique = valeur saisie ou valeur déjà existante en BDD
+      const theorique =
+        stockTheorique[lot.id]?.theorique ?? lot.quantite_theorique ?? 0;
+
+      const ecart = theorique - lot.quantite;
+
       globalSysteme += lot.quantite;
       globalTheorique += theorique;
       globalEcart += ecart;
@@ -49,23 +52,69 @@ function ControleInventaire() {
   });
 
   const allLotsOkGlobal = globalEcart === 0;
-  const handleValider = async (id, quantite) => {
-    const payload = {
-      quantiteLot: quantite,
-      idlot: id,
-    };
+
+  //   const handleValider = async (id) => {
+  //     const payload = {
+  //       idlot: id,
+  //     };
+  //     try {
+  //       await dispatch(RamenerQuantiteTheorique(payload, dispatch));
+  //       await dispatch(listeProduitValide());
+  //       messageSucces("Opération effectuée avec succès ✅");
+  //     } catch (error) {
+  //       messageErreur("Une erreur est survenue !", error);
+  //     }
+  //   };
+  const confirmAction = async () => {
+    const payload = { idlot: selectedLotId };
     try {
-      await dispatch(mettreAJourQuantiteTheorique(payload, dispatch));
-      await dispatch(listeProduitInventaire());
+      await dispatch(RamenerQuantiteTheorique(payload, dispatch));
+      await dispatch(listeProduitValide());
       messageSucces("Opération effectuée avec succès ✅");
     } catch (error) {
       messageErreur("Une erreur est survenue !", error);
-      //   console.error("Erreur d’enregistrement ❌", error);
+    } finally {
+      setShowConfirm(false);
+      setSelectedLotId(null);
     }
   };
   return (
     <div>
-      <h5>Vérification des produits entrants</h5>
+      <div>
+        {/* ... ton tableau ... */}
+
+        {/* Fenêtre de confirmation */}
+        {showConfirm && (
+          <div className="modal show" style={{ display: "block" }}>
+            <div className="modal-dialog">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h5 className="modal-title">Confirmation</h5>
+                  <button
+                    className="btn-close"
+                    onClick={() => setShowConfirm(false)}
+                  ></button>
+                </div>
+                <div className="modal-body">
+                  <p>Voulez-vous vraiment valider cette opération ?</p>
+                </div>
+                <div className="modal-footer">
+                  <button
+                    className="btn btn-secondary"
+                    onClick={() => setShowConfirm(false)}
+                  >
+                    Annuler
+                  </button>
+                  <button className="btn btn-success" onClick={confirmAction}>
+                    Confirmer
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+      <h5>Produit validé</h5>
       <table style={{ width: "100%", borderCollapse: "collapse" }}>
         <thead>
           <tr>
@@ -145,23 +194,30 @@ function ControleInventaire() {
         </thead>
 
         <tbody>
-          {stateProduitInventaire.map((item, index) => {
-            // calcul des totaux
+          {stateProduitValide.map((item, index) => {
+            // === Totaux par produit ===
             let totalSysteme = 0;
             let totalTheorique = 0;
             let totalEcart = 0;
 
             const allLotsOk = item.lots.every((lot) => {
-              const ecart = stockTheorique[lot.id]?.ecart ?? -lot.quantite;
-              return ecart === 0;
+              const theorique =
+                stockTheorique[lot.id]?.theorique ??
+                lot.quantite_theorique ??
+                0;
+              return theorique - lot.quantite === 0;
             });
 
             item.lots.forEach((lot) => {
-              const theorique = stockTheorique[lot.id]?.theorique || 0;
-              // const ecart = stockTheorique[lot.id]?.ecart || (0 - lot.quantite);
+              const theorique =
+                stockTheorique[lot.id]?.theorique ??
+                lot.quantite_theorique ??
+                0;
+              const ecart = theorique - lot.quantite;
+
               totalSysteme += lot.quantite;
               totalTheorique += theorique;
-              totalEcart += theorique - lot.quantite;
+              totalEcart += ecart;
             });
 
             return (
@@ -169,7 +225,7 @@ function ControleInventaire() {
                 {/* Ligne produit */}
                 <tr
                   style={{
-                    backgroundColor: allLotsOk ? "#d4edda" : "#f2f2f2", // vert si tous lots = 0
+                    backgroundColor: allLotsOk ? "#fdfefdff" : "#f2f2f2",
                     color: allLotsOk ? "green" : "black",
                     cursor: "pointer",
                     fontWeight: "bold",
@@ -198,8 +254,11 @@ function ControleInventaire() {
                 {/* Lignes lots */}
                 {expandedRows[item.produit.id] &&
                   item.lots.map((lot, lotIndex) => {
-                    const theorique = stockTheorique[lot.id]?.theorique || "";
-                    const ecart = stockTheorique[lot.id]?.ecart ?? 0;
+                    const theorique =
+                      stockTheorique[lot.id]?.theorique ??
+                      lot.quantite_theorique ??
+                      0;
+                    const ecart = theorique - lot.quantite;
 
                     return (
                       <tr key={lot.id}>
@@ -234,23 +293,7 @@ function ControleInventaire() {
                             textAlign: "center",
                           }}
                         >
-                          <input
-                            type="number"
-                            style={{
-                              width: "120px",
-                              textAlign: "right",
-                              padding: 5,
-                              border: "1px solid #000",
-                            }}
-                            value={theorique}
-                            onChange={(e) =>
-                              handleStockChange(
-                                lot.id,
-                                lot.quantite,
-                                e.target.value
-                              )
-                            }
-                          />
+                          {theorique}
                         </td>
                         <td
                           style={{
@@ -284,70 +327,22 @@ function ControleInventaire() {
                           <button
                             style={{
                               padding: "10px 20px",
-                              backgroundColor: "#4CAF50",
+                              backgroundColor: "#0fcce1ff",
                               color: "white",
                               border: "none",
                               borderRadius: "5px",
                               cursor: "pointer",
                             }}
-                            onClick={() => handleValider(lot.id, theorique)}
+                            onClick={() => openConfirm(lot.id)}
                           >
-                            Valider
+                            Ramener
                           </button>
                         </td>
                       </tr>
                     );
                   })}
 
-                {/* Ligne total */}
-                {/* {expandedRows[item.produit.id] && (
-                  <tr
-                    style={{ backgroundColor: "#e6e6e6", fontWeight: "bold" }}
-                  >
-                    <td
-                      colSpan={3}
-                      style={{
-                        border: "1px solid #000",
-                        padding: 8,
-                        textAlign: "right",
-                      }}
-                    >
-                      Total {item.produit.libelle}
-                    </td>
-                    <td
-                      style={{
-                        border: "1px solid #000",
-                        padding: 8,
-                        textAlign: "center",
-                      }}
-                    >
-                      {totalSysteme}
-                    </td>
-                    <td
-                      style={{
-                        border: "1px solid #000",
-                        padding: 8,
-                        textAlign: "center",
-                      }}
-                    >
-                      {totalTheorique}
-                    </td>
-                    <td
-                      style={{
-                        border: "1px solid #000",
-                        padding: 8,
-                        textAlign: "center",
-                        backgroundColor:
-                          totalEcart === 0 ? "#d4edda" : "#f8d7da",
-                        color: totalEcart === 0 ? "green" : "red",
-                      }}
-                    >
-                      {totalEcart}
-                    </td>
-                  </tr>
-                )} */}
-
-                {/* Ligne total par produit (toujours visible) */}
+                {/* Ligne total par produit */}
                 <tr
                   style={{
                     backgroundColor: allLotsOk ? "#d4edda" : "#e6e6e6",
@@ -411,9 +406,13 @@ function ControleInventaire() {
               </React.Fragment>
             );
           })}
+
+          {/* Ligne total global */}
           <tr
             style={{
-              backgroundColor: allLotsOkGlobal ? "#d4edda" : "#f8d7da",
+              backgroundColor: allLotsOkGlobal
+                ? "rgba(244, 212, 118, 1)"
+                : "#f3f2f2ff",
               fontWeight: "bold",
             }}
           >
@@ -476,4 +475,4 @@ function ControleInventaire() {
   );
 }
 
-export default ControleInventaire;
+export default InventaireValide;

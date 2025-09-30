@@ -11,6 +11,7 @@ import TbModuleStock from "../components/dossierTableauBord/TbModuleStock";
 import ListeProduitProvisoire from "../pages/dossierCaissier/listeProduitProvisoire";
 import FromProfil from "../pages/utilisateur/FromProfil";
 import ControleInventaire from "../pages/dossierResponsable/ControleInventaire";
+import InventaireValide from "../pages/dossierResponsable/InventaireValide";
 // import Principal from "../components/principal";
 // import PrincipalPlan from "../pages/PlanStructure/PrincipalPlan";
 // import Role from "../pages/gestionUtilisateur/role/role";
@@ -43,6 +44,7 @@ const AppRoutes = () => {
           />
           <Route path="fromProfil/:module" element={<FromProfil />} />
           <Route path="controleInventaire/:module" element={<ControleInventaire />} />
+          <Route path="inventaireValide/:module" element={<InventaireValide />} />
           {/* <Route path="structure" element={<Structure />} />
           <Route path="planStructure" element={<PrincipalPlan />} />
           <Route path="role" element={<Role />} />

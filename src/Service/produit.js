@@ -136,7 +136,6 @@ export const listeProduitProvisoire = createAsyncThunk(
   }
 );
 
-
 export const listeProduitInventaire = createAsyncThunk(
   "inventaire/inventaire",
   async (_, thunkAPI) => {
@@ -151,27 +150,73 @@ export const listeProduitInventaire = createAsyncThunk(
     }
   }
 );
-
-
-
-
-
-
-export const mettreAJourQuantiteTheorique = createAsyncThunk(
-  "Theorique/Theorique",
-   
-  async ({ id, data }, thunkAPI) => {
-    
-     console.log("res.data", data);
+export const listeProduitValide = createAsyncThunk(
+  "inventaireValide/inventaireValide",
+  async (_, thunkAPI) => {
     try {
-      const res = await api.put(`/produit/mettreAJourQuantiteTheorique/${id}`, data);
-     
-      // thunkAPI.dispatch(afficherInformationLotParProduit(data?.idProduit));
-      return res.data; // Retourne la structure modifiée
+      const res = await api.get("/produit/listeProduitInventaireValide"); // <-- adapte cette route à ton backend
+
+      return res.data; // On suppose que res.data contient la liste des structures
     } catch (err) {
       return thunkAPI.rejectWithValue(
-        err.response?.data || "Erreur lors de la modification du lot"
+        err.response?.data || "Erreur lors de la récupération des produit"
       );
+    }
+  }
+);
+
+// export const mettreAJourQuantiteTheorique = createAsyncThunk(
+//   "Theorique/Theorique",
+
+//   async ({ id, data }, thunkAPI) => {
+
+//      console.log("res.data", data);
+//     try {
+//       const res = await api.put(`/produit/mettreAJourQuantiteTheorique/${id}`, data);
+
+//       // thunkAPI.dispatch(afficherInformationLotParProduit(data?.idProduit));
+//       return res.data; // Retourne la structure modifiée
+//     } catch (err) {
+//       return thunkAPI.rejectWithValue(
+//         err.response?.data || "Erreur lors de la modification du lot"
+//       );
+//     }
+//   }
+// );
+
+export const mettreAJourQuantiteTheorique = createAsyncThunk(
+  "produit/mettreAJourQuantiteTheorique",
+  async ({ idlot, quantiteLot }, thunkAPI) => {
+    try {
+      const res = await api.get(
+        `/produit/miseAjourQuantite/${idlot}/${quantiteLot}`
+      );
+
+      // recharger la liste des produits après mise à jour
+
+      return res.data;
+    } catch (error) {
+      console.error("Erreur API lots :", error);
+      return thunkAPI.rejectWithValue(error.response?.data || "Erreur serveur");
+    }
+  }
+);
+
+
+export const RamenerQuantiteTheorique = createAsyncThunk(
+  "produitramener/produitramener",
+  async ({ idlot }, thunkAPI) => {
+    try {
+      const res = await api.get(
+        `/produit/ramenerQuantite/${idlot}`
+      );
+
+      // recharger la liste des produits après mise à jour
+
+      return res.data;
+    } catch (error) {
+      console.error("Erreur API lots :", error);
+      return thunkAPI.rejectWithValue(error.response?.data || "Erreur serveur");
     }
   }
 );

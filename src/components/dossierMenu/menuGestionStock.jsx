@@ -1,8 +1,22 @@
-import React from "react";
-//import { Link, useParams } from "react-router-dom";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
+
 function MenuGestionStock() {
-  //const { module } = useParams();
+  // États pour chaque menu (true = ouvert, false = fermé)
+  const [openMenu, setOpenMenu] = useState({
+    parametre: false,
+    magasinier: false,
+    caissier: false,
+    responsable: false,
+    icons: false,
+    user: false,
+    error: false,
+  });
+
+  // Fonction pour basculer un menu
+  const toggleMenu = (menu) => {
+    setOpenMenu((prev) => ({ ...prev, [menu]: !prev[menu] }));
+  };
 
   return (
     <div>
@@ -14,61 +28,49 @@ function MenuGestionStock() {
           </span>
         </a>
       </li>
+
+      {/* Paramètre */}
       <li className="nav-item">
         <a
           className="nav-link"
-          data-toggle="collapse"
-          href="#ui-basic"
-          aria-expanded="false"
-          aria-controls="ui-basic"
+          onClick={() => toggleMenu("parametre")}
+          aria-expanded={openMenu.parametre}
         >
           <i className="typcn typcn-briefcase menu-icon"></i>
-          <span className="menu-title">Paramétre</span>
+          <span className="menu-title">Paramètre</span>
           <i className="typcn typcn-chevron-right menu-arrow"></i>
         </a>
-        <div className="collapse" id="ui-basic">
+        <div className={`collapse ${openMenu.parametre ? "show" : ""}`}>
           <ul className="nav flex-column sub-menu">
             <li className="nav-item">
-              <a
-                className="nav-link"
-                href="pages/ui-features/buttons.html"
-                style={{ fontWeight: "bold" }}
-              >
+              <a className="nav-link" style={{ fontWeight: "bold" }}>
                 Fournisseur
               </a>
             </li>
             <li className="nav-item">
-              {" "}
-              <a
-                className="nav-link"
-                href="pages/ui-features/dropdowns.html"
-                style={{ fontWeight: "bold" }}
-              >
+              <a className="nav-link" style={{ fontWeight: "bold" }}>
                 Utilisateur
               </a>
             </li>
             <li className="nav-item">
-              {" "}
-              <a className="nav-link" href="pages/ui-features/typography.html">
-                Typography
-              </a>
+              <a className="nav-link">Typography</a>
             </li>
           </ul>
         </div>
       </li>
+
+      {/* Menu Magasinier */}
       <li className="nav-item">
         <a
           className="nav-link"
-          data-toggle="collapse"
-          href="#form-elements"
-          aria-expanded="false"
-          aria-controls="form-elements"
+          onClick={() => toggleMenu("magasinier")}
+          aria-expanded={openMenu.magasinier}
         >
           <i className="typcn typcn-film menu-icon"></i>
           <span className="menu-title">Menu Magasinier</span>
           <i className="menu-arrow"></i>
         </a>
-        <div className="collapse" id="form-elements">
+        <div className={`collapse ${openMenu.magasinier ? "show" : ""}`}>
           <ul className="nav flex-column sub-menu">
             <li className="nav-item">
               <Link
@@ -82,19 +84,19 @@ function MenuGestionStock() {
           </ul>
         </div>
       </li>
+
+      {/* Menu Caissier */}
       <li className="nav-item">
         <a
           className="nav-link"
-          data-toggle="collapse"
-          href="#charts"
-          aria-expanded="false"
-          aria-controls="charts"
+          onClick={() => toggleMenu("caissier")}
+          aria-expanded={openMenu.caissier}
         >
           <i className="typcn typcn-chart-pie-outline menu-icon"></i>
           <span className="menu-title">Menu Caissier</span>
           <i className="menu-arrow"></i>
         </a>
-        <div className="collapse" id="charts">
+        <div className={`collapse ${openMenu.caissier ? "show" : ""}`}>
           <ul className="nav flex-column sub-menu">
             <li className="nav-item">
               <Link
@@ -108,19 +110,19 @@ function MenuGestionStock() {
           </ul>
         </div>
       </li>
+
+      {/* Menu Responsable */}
       <li className="nav-item">
         <a
           className="nav-link"
-          data-toggle="collapse"
-          href="#tables"
-          aria-expanded="false"
-          aria-controls="tables"
+          onClick={() => toggleMenu("responsable")}
+          aria-expanded={openMenu.responsable}
         >
-          <i className="typcn typcn-th-small-outline menu-icon"></i>
+          <i className="typcn typcn-compass menu-icon "></i>
           <span className="menu-title">Menu Responsable</span>
           <i className="menu-arrow"></i>
         </a>
-        <div className="collapse" id="tables">
+        <div className={`collapse ${openMenu.responsable ? "show" : ""}`}>
           <ul className="nav flex-column sub-menu">
             <li className="nav-item">
               <Link
@@ -131,94 +133,23 @@ function MenuGestionStock() {
                 Inventaire
               </Link>
             </li>
+            <li className="nav-item">
+              <Link
+                to={`/inventaireValide/${1}`}
+                className="nav-link"
+                style={{ fontWeight: "bold" }}
+              >
+                Inventaire Validé
+              </Link>
+            </li>
+            
+
           </ul>
         </div>
       </li>
-      <li className="nav-item">
-        <a
-          className="nav-link"
-          data-toggle="collapse"
-          href="#icons"
-          aria-expanded="false"
-          aria-controls="icons"
-        >
-          <i className="typcn typcn-compass menu-icon"></i>
-          <span className="menu-title">Icons</span>
-          <i className="menu-arrow"></i>
-        </a>
-        <div className="collapse" id="icons">
-          <ul className="nav flex-column sub-menu">
-            <li className="nav-item">
-              {" "}
-              <a className="nav-link" href="pages/icons/mdi.html">
-                Mdi icons
-              </a>
-            </li>
-          </ul>
-        </div>
-      </li>
-      <li className="nav-item">
-        <a
-          className="nav-link"
-          data-toggle="collapse"
-          href="#auth"
-          aria-expanded="false"
-          aria-controls="auth"
-        >
-          <i className="typcn typcn-user-add-outline menu-icon"></i>
-          <span className="menu-title">User Pages</span>
-          <i className="menu-arrow"></i>
-        </a>
-        <div className="collapse" id="auth">
-          <ul className="nav flex-column sub-menu">
-            <li className="nav-item">
-              {" "}
-              <a className="nav-link" href="pages/samples/login.html">
-                {" "}
-                Login{" "}
-              </a>
-            </li>
-            <li className="nav-item">
-              {" "}
-              <a className="nav-link" href="pages/samples/register.html">
-                {" "}
-                Register{" "}
-              </a>
-            </li>
-          </ul>
-        </div>
-      </li>
-      <li className="nav-item">
-        <a
-          className="nav-link"
-          data-toggle="collapse"
-          href="#error"
-          aria-expanded="false"
-          aria-controls="error"
-        >
-          <i className="typcn typcn-globe-outline menu-icon"></i>
-          <span className="menu-title">Error pages</span>
-          <i className="menu-arrow"></i>
-        </a>
-        <div className="collapse" id="error">
-          <ul className="nav flex-column sub-menu">
-            <li className="nav-item">
-              {" "}
-              <a className="nav-link" href="pages/samples/error-404.html">
-                {" "}
-                404{" "}
-              </a>
-            </li>
-            <li className="nav-item">
-              {" "}
-              <a className="nav-link" href="pages/samples/error-500.html">
-                {" "}
-                500{" "}
-              </a>
-            </li>
-          </ul>
-        </div>
-      </li>
+
+      {/* ... tu continues le même principe pour "icons", "user", "error" ... */}
+
       <li className="nav-item">
         <a className="nav-link" href="pages/documentation/documentation.html">
           <i className="typcn typcn-document-text menu-icon"></i>

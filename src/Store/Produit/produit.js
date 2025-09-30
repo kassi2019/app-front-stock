@@ -3,6 +3,7 @@ import {
   listeProduit,
   listeProduitProvisoire,
   listeProduitInventaire,
+  listeProduitValide
   //   ajouterStructure,
   //   modifierStructure,
   //   supprimerStructure,
@@ -14,6 +15,7 @@ const produitSlice = createSlice({
     stateProduit: [],
     stateProduitProvisoire: [],
     stateProduitInventaire: [],
+    stateProduitValide:[],
     optionsSelect: [],
     loading: false,
     error: null,
@@ -87,6 +89,23 @@ const produitSlice = createSlice({
       })
 
       .addCase(listeProduitInventaire.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload.data;
+      })
+    
+     .addCase(listeProduitValide.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(listeProduitValide.fulfilled, (state, action) => {
+        state.loading = false;
+        state.stateProduitValide = action.payload.map((p) => ({
+          ...p,
+          quantite: p.quantite ?? 0, // ✅ toujours un nombre
+        }));
+      })
+
+      .addCase(listeProduitValide.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload.data;
       });

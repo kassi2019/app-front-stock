@@ -42,7 +42,7 @@ function ListeProduitProvisoire() {
               style={{
                 border: "1px solid #000",
                 padding: 8,
-                width: "40%",
+                width: "35%",
                 textAlign: "center",
               }}
             >
@@ -62,7 +62,16 @@ function ListeProduitProvisoire() {
                 border: "1px solid #000",
                 padding: 8,
                 textAlign: "center",
-                width: "15%",
+              }}
+            >
+              Qte disponible
+            </th>
+            <th
+              style={{
+                border: "1px solid #000",
+                padding: 8,
+                textAlign: "center",
+                width: "10%",
               }}
             >
               Quantité vendue
@@ -82,7 +91,19 @@ function ListeProduitProvisoire() {
 
         <tbody>
           {stateProduitProvisoire.map((lot, index) => (
-            <tr key={lot.id}>
+            <tr
+              key={lot.id}
+              style={{
+                backgroundColor:
+                  lot.quantite > lot.resteDisponible
+                    ? "#ffcccc"
+                    : "transparent", // 🔴 fond rouge clair si insuffisant
+                border:
+                  lot.quantite > lot.resteDisponible
+                    ? "2px solid red"
+                    : "1px solid #000", // bordure rouge si insuffisant
+              }}
+            >
               <td
                 style={{
                   border: "1px solid #000",
@@ -114,6 +135,20 @@ function ListeProduitProvisoire() {
                   textAlign: "right",
                 }}
               >
+                {lot.resteDisponible || 0}
+              </td>
+              <td
+                style={{
+                  border: "1px solid #000",
+                  padding: 8,
+                  textAlign: "right",
+                }}
+              >
+                {lot.resteDisponible < lot.quantite && (
+                  <span style={{ fontWeight: "bold", color: "red", fontSize: 12 }}>
+                    Qte disponible est insuffisante
+                  </span>
+                )}
                 <input
                   type="number"
                   value={lot.quantite ?? ""}
@@ -141,7 +176,7 @@ function ListeProduitProvisoire() {
           {/* Montant Reçu */}
           <tr>
             <td
-              colSpan={5}
+              colSpan={6}
               style={{
                 textAlign: "right",
                 padding: 8,
@@ -176,7 +211,7 @@ function ListeProduitProvisoire() {
           {/* Montant à payer */}
           <tr>
             <td
-              colSpan={5}
+              colSpan={6}
               style={{
                 textAlign: "right",
                 padding: 8,
@@ -201,7 +236,7 @@ function ListeProduitProvisoire() {
           {/* Monnaie rendu */}
           <tr>
             <td
-              colSpan={5}
+              colSpan={6}
               style={{
                 textAlign: "right",
                 padding: 8,

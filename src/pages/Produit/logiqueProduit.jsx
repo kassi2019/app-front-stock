@@ -241,10 +241,10 @@ export const useLogiqueProduit = () => {
                     color: "white",
                   }}
                 >
-                  <th style={{ width: "10%" }}>Code</th>
-                  <th style={{ width: "50%" }}>Libellé</th>
+                  <th style={{ width: "10%",backgroundColor: "rgba(21, 162, 244, 1)", color: "white" }}>Code</th>
+                  <th style={{ width: "50%",backgroundColor: "rgba(21, 162, 244, 1)", color: "white" }}>Libellé</th>
 
-                  <th style={{ width: "10%" }}>Prix unitaire</th>
+                  <th style={{ width: "10%" ,backgroundColor: "rgba(21, 162, 244, 1)", color: "white"}}>Prix unitaire</th>
                 </tr>
               </thead>
               <tbody>

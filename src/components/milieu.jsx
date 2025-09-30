@@ -35,7 +35,7 @@ const statCards = [
     number: 30,
     label: "Gestion de stock",
     color: "#F59E0B",
-    route: "/TbModuleStock",
+    route: "/PageTableauBord",
     module:1
   },
   // {

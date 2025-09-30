@@ -2,6 +2,7 @@
 import TableGlobal from "../../globalComponents/TableGlobal";
 import ModalPetit from "../../globalComponents/ModalPetit.jsx";
 import ModalLG from "../../globalComponents/Modal_LG.jsx";
+import ModalXL from "../../globalComponents/Modal_XL.jsx";
 import { useLogiqueProduit } from "./logiqueProduit.jsx";
 import FromProduit from "./FromProduit.jsx";
 import FormLotProduit from "./FormLotProduit.jsx";
@@ -92,13 +93,13 @@ function Produit() {
         {modalState.content}
       </ModalPetit>
 
-      <ModalLG
+      <ModalXL
         show={modalState2.show}
         onClose={() => setModalState2({ ...modalState2, show: false })}
         title={modalState2.title}
       >
         {modalState2.content}
-      </ModalLG>
+      </ModalXL>
       <ModalPetit
         show={modalState3.show}
         onClose={() => setModalState3({ ...modalState3, show: false })}

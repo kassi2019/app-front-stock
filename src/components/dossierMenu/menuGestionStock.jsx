@@ -1,7 +1,9 @@
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 function MenuGestionStock() {
+  const { stateAllUtilisateur } = useSelector((state) => state.login);
   // États pour chaque menu (true = ouvert, false = fermé)
   const [openMenu, setOpenMenu] = useState({
     parametre: false,
@@ -12,7 +14,7 @@ function MenuGestionStock() {
     user: false,
     error: false,
   });
-
+ 
   // Fonction pour basculer un menu
   const toggleMenu = (menu) => {
     setOpenMenu((prev) => ({ ...prev, [menu]: !prev[menu] }));
@@ -20,17 +22,19 @@ function MenuGestionStock() {
 
   return (
     <div>
-      <li className="nav-item">
-        <a className="nav-link" href="index.html">
-          <i className="typcn typcn-device-desktop menu-icon"></i>
-          <span className="menu-title">
-            Dashboard <span className="badge badge-primary ml-3">New</span>
-          </span>
-        </a>
-      </li>
+      {stateAllUtilisateur?.role?.id === 1 && (
+        <li className="nav-item">
+          <a className="nav-link" href="index.html">
+            <i className="typcn typcn-device-desktop menu-icon"></i>
+            <span className="menu-title">
+              Dashboard <span className="badge badge-primary ml-3">New</span>
+            </span>
+          </a>
+        </li>
+      )}
 
       {/* Paramètre */}
-      <li className="nav-item">
+      {stateAllUtilisateur?.role?.id === 1 && ( <li className="nav-item">
         <a
           className="nav-link"
           onClick={() => toggleMenu("parametre")}
@@ -58,9 +62,10 @@ function MenuGestionStock() {
           </ul>
         </div>
       </li>
+      )}
 
       {/* Menu Magasinier */}
-      <li className="nav-item">
+     {(stateAllUtilisateur?.role?.id === 1 || stateAllUtilisateur?.role?.id === 3) && (  <li className="nav-item">
         <a
           className="nav-link"
           onClick={() => toggleMenu("magasinier")}
@@ -84,9 +89,10 @@ function MenuGestionStock() {
           </ul>
         </div>
       </li>
+     )}
 
       {/* Menu Caissier */}
-      <li className="nav-item">
+      {(stateAllUtilisateur?.role?.id === 1 || stateAllUtilisateur?.role?.id === 2) && ( <li className="nav-item">
         <a
           className="nav-link"
           onClick={() => toggleMenu("caissier")}
@@ -110,9 +116,9 @@ function MenuGestionStock() {
           </ul>
         </div>
       </li>
-
+      )}
       {/* Menu Responsable */}
-      <li className="nav-item">
+           {(stateAllUtilisateur?.role?.id === 1 || stateAllUtilisateur?.role?.id === 4) && ( <li className="nav-item">
         <a
           className="nav-link"
           onClick={() => toggleMenu("responsable")}
@@ -142,20 +148,18 @@ function MenuGestionStock() {
                 Inventaire Validé
               </Link>
             </li>
-            
-
           </ul>
         </div>
       </li>
-
+           )}
       {/* ... tu continues le même principe pour "icons", "user", "error" ... */}
 
-      <li className="nav-item">
+      {/* <li className="nav-item">
         <a className="nav-link" href="pages/documentation/documentation.html">
           <i className="typcn typcn-document-text menu-icon"></i>
           <span className="menu-title">Documentation</span>
         </a>
-      </li>
+      </li> */}
     </div>
   );
 }

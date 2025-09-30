@@ -7,7 +7,7 @@ import AccueilPrincipal from "../components/AccueilPrincipal";
 // import Structure from "../pages/Structure/Structure";
 import TableauBord from "../components/tableauBord";
 import Produit from "../pages/Produit/produit";
-import TbModuleStock from "../components/dossierTableauBord/TbModuleStock";
+import PageTableauBord from "../components/dossierTableauBord/PageTableauBord";
 import ListeProduitProvisoire from "../pages/dossierCaissier/listeProduitProvisoire";
 import FromProfil from "../pages/utilisateur/FromProfil";
 import ControleInventaire from "../pages/dossierResponsable/ControleInventaire";
@@ -36,7 +36,8 @@ const AppRoutes = () => {
           {/* <Route path="accueil" element={<Milieu />} /> */}
           <Route path="tableauBord" element={<TableauBord />} />
           <Route path="/produit/:module" element={<Produit />} />
-          <Route path="TbModuleStock/:module" element={<TbModuleStock />} />
+          <Route path="PageTableauBord/:module" element={<PageTableauBord />} />
+          
           {/* to={`/fromProfil/${module}`} */}
           <Route
             path="listeProduitProvisoire/:module"

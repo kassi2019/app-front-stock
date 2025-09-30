@@ -327,7 +327,7 @@ function InventaireValide() {
                           <button
                             style={{
                               padding: "10px 20px",
-                              backgroundColor: "#0fcce1ff",
+                              backgroundColor: "rgba(239, 46, 16, 1)",
                               color: "white",
                               border: "none",
                               borderRadius: "5px",
@@ -335,7 +335,7 @@ function InventaireValide() {
                             }}
                             onClick={() => openConfirm(lot.id)}
                           >
-                            Ramener
+                            Annuler
                           </button>
                         </td>
                       </tr>

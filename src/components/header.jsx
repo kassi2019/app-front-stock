@@ -58,9 +58,14 @@ function Header() {
               </Link>
             </li>
             <li className="nav-item  d-none d-lg-flex">
-              <a className="nav-link" href="#" style={{ fontWeight: "bold" }}>
-                Employee
-              </a>
+             
+              <Link
+                to={`/PageTableauBord/${0}`}
+                className="nav-link"
+                style={{ fontWeight: "bold" }}
+              >
+                Voir Tableau de bord
+              </Link>
             </li>
           </ul>
           <ul className="navbar-nav navbar-nav-right">

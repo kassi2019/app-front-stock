@@ -95,6 +95,24 @@ function MenuGestionStock() {
             <ul className="nav flex-column sub-menu">
               <li className="nav-item">
                 <Link
+                  to={`/categorieFournisseur/${1}`}
+                  className="nav-link"
+                  style={{ fontWeight: "bold" }}
+                >
+                  Catégorie Fournisseur
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link
+                  to={`/fournisseur/${1}`}
+                  className="nav-link"
+                  style={{ fontWeight: "bold" }}
+                >
+                  Fournisseur
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link
                   to={`/produit/${1}`}
                   className="nav-link"
                   style={{ fontWeight: "bold" }}

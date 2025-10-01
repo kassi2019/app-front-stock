@@ -1,6 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
 import loginReducer from "./Login/login";
 import produitReducer from "./Produit/produit";
+import fournisseurReducer from "./Fournisseur/fournisseur";
+import categorieFournisseurReducer from "./CategorieFournisseur/categorieFournisseur";
+// import { setupListeners } from '@reduxjs/toolkit/query'
+// import { api } from '../Service/api'
 // import structureReducer from './Structure/structure'
 // import planStructureReducer from './PlanStructure/planStructure'
 // import roleReducer from './Role/role'
@@ -13,6 +17,9 @@ export const store = configureStore({
   reducer: {
     login: loginReducer,
     produits: produitReducer,
+    fournisseurs: fournisseurReducer,
+    categorieFournisseurs: categorieFournisseurReducer,
+    // [api.reducerPath]: api.reducer,
     // structures: structureReducer,
     // structuresPlans: planStructureReducer,
     // roles: roleReducer,

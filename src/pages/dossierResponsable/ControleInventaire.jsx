@@ -7,6 +7,12 @@ import {
   listeProduitInventaire,
   mettreAJourQuantiteTheorique,
 } from "../../Service/produit.js";
+import {
+  afficherQteDisponible,
+  AfficherQuantiteEnAttente,
+  AfficherQuantiteExpirer,
+} from "../../Service/tableauBord.js";
+import { useSocketProduit } from "../../Service/useSocketProduit.js";
 import { useDispatch, useSelector } from "react-redux";
 // import { messageSucces } from "../../globalComponents/Notification.js";
 function ControleInventaire() {
@@ -57,12 +63,16 @@ function ControleInventaire() {
     try {
       await dispatch(mettreAJourQuantiteTheorique(payload, dispatch));
       await dispatch(listeProduitInventaire());
+      await dispatch(AfficherQuantiteEnAttente());
+      await dispatch(AfficherQuantiteExpirer());
+      await dispatch(afficherQteDisponible());
       messageSucces("Opération effectuée avec succès ✅");
     } catch (error) {
       messageErreur("Une erreur est survenue !", error);
       //   console.error("Erreur d’enregistrement ❌", error);
     }
   };
+  useSocketProduit();
   return (
     <div>
       <h5>Vérification des produits entrants</h5>

@@ -3,6 +3,7 @@ import loginReducer from "./Login/login";
 import produitReducer from "./Produit/produit";
 import fournisseurReducer from "./Fournisseur/fournisseur";
 import categorieFournisseurReducer from "./CategorieFournisseur/categorieFournisseur";
+import tableauBordReducer from "./TableauBord/tableauBord";
 // import { setupListeners } from '@reduxjs/toolkit/query'
 // import { api } from '../Service/api'
 // import structureReducer from './Structure/structure'
@@ -19,6 +20,7 @@ export const store = configureStore({
     produits: produitReducer,
     fournisseurs: fournisseurReducer,
     categorieFournisseurs: categorieFournisseurReducer,
+    tableauBord: tableauBordReducer,
     // [api.reducerPath]: api.reducer,
     // structures: structureReducer,
     // structuresPlans: planStructureReducer,

@@ -18,8 +18,8 @@ export const useLogiqueProduitProvisoire = () => {
   // ✅ Montant reçu saisi par le caissier
   const [montantRecu, setMontantRecu] = useState(0);
 
-    // ✅ Total à payer = somme (prix * quantite)
-    5000
+  // ✅ Total à payer = somme (prix * quantite)
+  5000;
   const montantAPayer = stateProduitProvisoire.reduce(
     (acc, lot) => acc + lot.tb_produit.prix_unitaire * (lot.quantite || 0),
     0
@@ -41,12 +41,12 @@ export const useLogiqueProduitProvisoire = () => {
       montant_recu: Number(montantRecu),
       montant_a_payer: Number(montantAPayer),
       monnaie_rendu: Number(monnaieRendu),
-
       tb_vente_detail: stateProduitProvisoire.map((lot) => ({
         produit_id: Number(lot.tb_produit.id),
         quantite: Number(lot.quantite),
         prix_unitaire: Number(lot.tb_produit.prix_unitaire),
         total: Number(lot.tb_produit.prix_unitaire * lot.quantite),
+        stock_temporel_id: Number(lot.id),
       })),
     };
 

@@ -29,7 +29,7 @@ export const useLogiqueTbResponsableStock = () => {
   }, [dispatch]);
 
   // ✅ Changer la quantité d’un produit précis
-
+console.log({stateProduitExpire});
   return {
     stateQteDisponible,
     stateQteEnAttente,

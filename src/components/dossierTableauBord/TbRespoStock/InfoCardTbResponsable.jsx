@@ -22,8 +22,11 @@ function InfoCardTbResponsable({ title, value, gradient, handleOpenModal }) {
             <h5 className="card-title fw-semibold">{title}</h5>
             <p className="card-text display-6 fw-bold">{value}</p>
           </div>
-        </div>
       </div>
+      
+      
+    </div>
+    
   );
 }
 

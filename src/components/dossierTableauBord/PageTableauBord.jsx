@@ -1,5 +1,5 @@
 import React from 'react';
-import TbResponsableStock from './TbResponsableStock';
+import TbResponsableStock from './TbRespoStock/TbResponsableStock';
 import TbMagasinier from './TbMagasinier';
 import TbCaissier from './TbCaissier';
 import { useSelector } from 'react-redux';

@@ -20,6 +20,9 @@
     "@zxing/library": "^0.21.3",
     "axios": "^1.10.0",
     "bootstrap": "^5.3.7",
+    "file-saver": "^2.0.5",
+    "jspdf": "^3.0.3",
+    "jspdf-autotable": "^5.0.2",
     "react": "^19.1.0",
     "react-barcode": "^1.6.1",
     "react-bootstrap": "^2.10.10",
@@ -32,7 +35,9 @@
     "react-webcam-barcode-scanner": "^0.0.2",
     "recharts": "^3.2.1",
     "socket.io-client": "^4.8.1",
-    "sweetalert2": "^11.22.2"
+    "sweetalert2": "^11.22.2",
+    "xlsx": "^0.18.5",
+    "xlsx-style": "^0.8.13"
   },
   "devDependencies": {
     "@eslint/js": "^9.33.0",

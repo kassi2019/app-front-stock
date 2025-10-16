@@ -4,31 +4,29 @@ import { Modal, Button, Table } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import ControleInventaire from "../../../pages/dossierResponsable/ControleInventaire";
 import { useLogiqueTbResponsableStock } from "./logiqueTbResponsableStock";
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-  BarChart,
-  Bar,
-} from "recharts";
+
 import InfoCardTbResponsable from "./InfoCardTbResponsable";
+import Graphe1Quantite from "./graphe1Quantite";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import * as XLSX from "xlsx";
 
 import { saveAs } from "file-saver";
+import Graphe2QteExpirer from "./graphe2QteExpirer";
+import Graphe3QteQuotidienneJrs from "./graphe3QteQuotidienneJrs";
+import Graphe5QteQuotidienneAnnee from "./graphe5QteQuotidienneAnnee";
+import Graphe6ProduitPlusVendu from "./graphe6ProduitPlusVendu";
+import Graphe6MontantQuotidienneAnnee from "./graphe6MontantQuotidienneAnnee";
+import Graphe4MontantQuotidienneJrs from "./graphe4MontantQuotidienneJrs";
+import Graphe8MontantQuotidienneMois from "./graphe8MontantQuotidienneMois";
+import Graphe7QteQuotidienneMois from "./graphe7QteQuotidienneMois";
 const DashboardResponsable = () => {
   const {
     stateQteDisponible,
     stateQteEnAttente,
     stateQteExpire,
-    stateQteRentrantParMois,
-    stateProduitExpire,
+    // stateQteRentrantParMois,
+    //stateProduitExpire,
     stateDetaiQuantiteDisponible,
     stateDetaiQuantiteEnAttente,
     stateDetailQuantiteExpirationBientot,
@@ -45,7 +43,6 @@ const DashboardResponsable = () => {
   const handleOpenModal = (title, value) => {
     setModalData({ title, value });
 
-    console.log({ stateDetailQuantiteQuantiteNonDetruite });
     // 🔹 Exemple de contenu dynamique selon la carte cliquée :
     switch (title) {
       case "📦 Stock dispo":
@@ -204,6 +201,7 @@ const DashboardResponsable = () => {
 
     saveAs(file, `${modalData.title || "rapport-stock"}.xlsx`);
   };
+
   return (
     <div>
       {/* Filtres en haut */}
@@ -279,127 +277,45 @@ const DashboardResponsable = () => {
       {/* Graphiques */}
       <div className="row">
         <div className="col-md-6 mb-4">
-          <div className="card shadow-sm">
-            <div className="card-header bg-secondary text-white">
-              📊 Quantité en stock par ({periode})
-            </div>
-            <div className="card-body">
-              <ResponsiveContainer width="100%" height={300}>
-                <LineChart data={stateQteRentrantParMois}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="mois" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-
-                  {/* 🟢 Courbe des quantités entrantes */}
-                  <Line
-                    type="monotone"
-                    dataKey="qte_rentree"
-                    stroke="#007bff" // Bleu
-                    strokeWidth={3}
-                    name="Quantité Entrée"
-                    dot={{ r: 5 }}
-                    activeDot={{ r: 7 }}
-                  />
-
-                  {/* 🔴 Courbe des quantités vendu */}
-                  <Line
-                    type="monotone"
-                    dataKey="qte_vendu"
-                    stroke="#086905ff" // Rouge
-                    strokeWidth={3}
-                    name="Quantité vendue"
-                    dot={{ r: 5 }}
-                    activeDot={{ r: 7 }}
-                  />
-
-                  {/* 🔴 Courbe des quantités perdu */}
-                  <Line
-                    type="monotone"
-                    dataKey="qte_perdu"
-                    stroke="#131210ff" // Rouge
-                    strokeWidth={3}
-                    name="Quantité Perdue"
-                    dot={{ r: 5 }}
-                    activeDot={{ r: 7 }}
-                  />
-
-                  {/* 🔴 Courbe des quantités perdu */}
-                  <Line
-                    type="monotone"
-                    dataKey="qte_expire"
-                    stroke="#0c15c1ff" // Rouge
-                    strokeWidth={3}
-                    name="Quantité Expirée"
-                    dot={{ r: 5 }}
-                    activeDot={{ r: 7 }}
-                  />
-
-                  {/* 🔴 Courbe des quantités detruite */}
-                  <Line
-                    type="monotone"
-                    dataKey="qte_detruire"
-                    stroke="#f30e62ff" // Rouge
-                    strokeWidth={3}
-                    name="Quantité Detruite"
-                    dot={{ r: 5 }}
-                    activeDot={{ r: 7 }}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
+          <Graphe1Quantite />
         </div>
 
         <div className="col-md-6 mb-4">
-          <div className="card shadow-sm">
-            <div className="card-header bg-secondary text-white">
-              📉 Quantité : Perdu && Expiré
-              {/* ({periode}) */}
-            </div>
-            <div className="card-body">
-              {/* <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={stateProduitExpire}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="produit" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Bar dataKey="pertes" fill="#dc3545" name="Pertes" />
-                  <Bar dataKey="expiration" fill="#ffc107" name="Expiration" />
-                </BarChart>
-              </ResponsiveContainer> */}
-
-              <ResponsiveContainer width="100%" height={300}>
-                <BarChart
-                  width={500}
-                  height={300}
-                  data={stateProduitExpire}
-                  margin={{
-                    top: 20,
-                    right: 30,
-                    left: 20,
-                    bottom: 5,
-                  }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="produit" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Bar dataKey="qteInitial" stackId="b" fill="#007bff" />
-                  <Bar dataKey="qteexpiration" stackId="a" fill="#e78309ff" />
-                  <Bar dataKey="qtevendue" stackId="a" fill="#0a8d3cff" />
-                  <Bar dataKey="qtepertes" stackId="a" fill="#131210ff" />
-                  <Bar dataKey="qteDisponible" stackId="a" fill="#ef0909ff" />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
+          <Graphe2QteExpirer />
         </div>
       </div>
-
+      <div className="row">
+        <div className="col-md-6 mb-4">
+          <Graphe3QteQuotidienneJrs />
+        </div>
+        <div className="col-md-6 mb-4">
+          <Graphe4MontantQuotidienneJrs />
+        </div>
+       
+        
+      </div>
+      <div className="row">
+ <div className="col-md-6 mb-4">
+          <Graphe7QteQuotidienneMois />
+        </div>
+         <div className="col-md-6 mb-4">
+          <Graphe8MontantQuotidienneMois />
+        </div>
+      </div>
+      <div className="row">
+        <div className="col-md-6 mb-4">
+          <Graphe5QteQuotidienneAnnee />
+        </div>
+         <div className="col-md-6 mb-4">
+          <Graphe6MontantQuotidienneAnnee />
+        </div>
+        
+      </div>
+      <div className="row">
+        <div className="col-md-12 mb-4">
+          <Graphe6ProduitPlusVendu />
+        </div>
+       </div>
       {/* 🪟 MODAL DYNAMIQUE */}
       <Modal
         show={showModal}

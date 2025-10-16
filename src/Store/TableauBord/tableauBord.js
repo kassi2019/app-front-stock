@@ -11,6 +11,10 @@ import {
   DetailQuantiteExpirationAujourdHui,
   DetailQuantiteQuantiteDetruite,
   DetailQuantiteQuantiteNonDetruite,
+
+  AfficherEvolutionVenteParJours,
+  AfficherEvolutionVenteParMois,
+  AfficherEvolutionVenteParAnnee
 } from "../../Service/tableauBord.js";
 
 const tableauBordSlice = createSlice({
@@ -21,6 +25,12 @@ const tableauBordSlice = createSlice({
     stateQteExpire: [],
     stateQteRentrantParMois: [],
     stateProduitExpire: [],
+
+
+    stateEvaluationVenteParJour: [],
+    stateEvaluationVenteParMois: [],
+    stateEvaluationVenteParAnnee: [],
+
 
     stateDetaiQuantiteDisponible: [],
     stateDetaiQuantiteEnAttente: [],
@@ -183,6 +193,52 @@ const tableauBordSlice = createSlice({
           action.payload.data || action.payload;
       })
       .addCase(DetailQuantiteQuantiteNonDetruite.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload.data;
+      })
+
+
+    
+      .addCase(AfficherEvolutionVenteParJours.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(AfficherEvolutionVenteParJours.fulfilled, (state, action) => {
+        state.loading = false;
+        state.stateEvaluationVenteParJour =
+          action.payload.data || action.payload;
+      })
+      .addCase(AfficherEvolutionVenteParJours.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload.data;
+      })
+    
+    
+    .addCase(AfficherEvolutionVenteParMois.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(AfficherEvolutionVenteParMois.fulfilled, (state, action) => {
+        state.loading = false;
+        state.stateEvaluationVenteParMois =
+          action.payload.data || action.payload;
+      })
+      .addCase(AfficherEvolutionVenteParMois.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload.data;
+      })
+    
+    
+    .addCase(AfficherEvolutionVenteParAnnee.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(AfficherEvolutionVenteParAnnee.fulfilled, (state, action) => {
+        state.loading = false;
+        state.stateEvaluationVenteParAnnee =
+          action.payload.data || action.payload;
+      })
+      .addCase(AfficherEvolutionVenteParAnnee.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload.data;
       });

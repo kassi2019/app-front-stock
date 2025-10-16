@@ -16,6 +16,9 @@ import {
   DetailQuantiteExpirationAujourdHui,
   DetailQuantiteQuantiteDetruite,
   DetailQuantiteQuantiteNonDetruite,
+  AfficherEvolutionVenteParJours,
+  AfficherEvolutionVenteParMois,
+  AfficherEvolutionVenteParAnnee
 } from "../../../Service/tableauBord.js";
 export const useLogiqueTbResponsableStock = () => {
   const dispatch = useDispatch();
@@ -48,6 +51,9 @@ export const useLogiqueTbResponsableStock = () => {
     dispatch(DetailQuantiteEnAttente());
     dispatch(DetailQuantiteDisponible());
     dispatch(DetailQuantiteQuantiteNonDetruite());
+    dispatch(AfficherEvolutionVenteParJours());
+    dispatch(AfficherEvolutionVenteParMois());
+    dispatch(AfficherEvolutionVenteParAnnee());
   }, [dispatch]);
 
   // ✅ Changer la quantité d’un produit précis

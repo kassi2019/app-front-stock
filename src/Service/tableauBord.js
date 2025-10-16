@@ -60,7 +60,6 @@ export const AfficherQteRecuParMois = createAsyncThunk(
   }
 );
 
-
 export const AfficherProduitExpirer = createAsyncThunk(
   "AfficherProduitExpirer/AfficherProduitExpirer",
   async (_, thunkAPI) => {
@@ -75,9 +74,6 @@ export const AfficherProduitExpirer = createAsyncThunk(
     }
   }
 );
-
-
-
 
 export const DetailQuantiteDisponible = createAsyncThunk(
   "DetailDisponible/DetailDisponible",
@@ -113,7 +109,9 @@ export const DetailQuantiteExpirationBientot = createAsyncThunk(
   "ExpirationBientot/ExpirationBientot",
   async (_, thunkAPI) => {
     try {
-      const res = await api.get("/tableau-bord/detail-quantite-expiration-bientot"); // <-- adapte cette route à ton backend
+      const res = await api.get(
+        "/tableau-bord/detail-quantite-expiration-bientot"
+      ); // <-- adapte cette route à ton backend
 
       return res.data; // On suppose que res.data contient la liste des structures
     } catch (err) {
@@ -128,7 +126,9 @@ export const DetailQuantiteExpirationAujourdHui = createAsyncThunk(
   "ExpirationAujourdHui/ExpirationAujourdHui",
   async (_, thunkAPI) => {
     try {
-      const res = await api.get("/tableau-bord/detail-quantite-expiration-aujourd-hui"); // <-- adapte cette route à ton backend
+      const res = await api.get(
+        "/tableau-bord/detail-quantite-expiration-aujourd-hui"
+      ); // <-- adapte cette route à ton backend
 
       return res.data; // On suppose que res.data contient la liste des structures
     } catch (err) {
@@ -159,6 +159,51 @@ export const DetailQuantiteQuantiteNonDetruite = createAsyncThunk(
   async (_, thunkAPI) => {
     try {
       const res = await api.get("/tableau-bord/detail-quantite-Non-Detruite"); // <-- adapte cette route à ton backend
+
+      return res.data; // On suppose que res.data contient la liste des structures
+    } catch (err) {
+      return thunkAPI.rejectWithValue(
+        err.response?.data || "Erreur lors de la récupération"
+      );
+    }
+  }
+);
+
+export const AfficherEvolutionVenteParJours = createAsyncThunk(
+  "EvolutionParJours/EvolutionParJours",
+  async (_, thunkAPI) => {
+    try {
+      const res = await api.get("/tableau-bord/evolution-vente-par-jour"); // <-- adapte cette route à ton backend
+
+      return res.data; // On suppose que res.data contient la liste des structures
+    } catch (err) {
+      return thunkAPI.rejectWithValue(
+        err.response?.data || "Erreur lors de la récupération"
+      );
+    }
+  }
+);
+
+export const AfficherEvolutionVenteParMois = createAsyncThunk(
+  "EvolutionParMois/EvolutionParMois",
+  async (_, thunkAPI) => {
+    try {
+      const res = await api.get("/tableau-bord/evolution-vente-par-mois"); // <-- adapte cette route à ton backend
+
+      return res.data; // On suppose que res.data contient la liste des structures
+    } catch (err) {
+      return thunkAPI.rejectWithValue(
+        err.response?.data || "Erreur lors de la récupération"
+      );
+    }
+  }
+);
+
+export const AfficherEvolutionVenteParAnnee = createAsyncThunk(
+  "EvolutionParAnnee/EvolutionParAnnee",
+  async (_, thunkAPI) => {
+    try {
+      const res = await api.get("/tableau-bord/evolution-vente-par-annee"); // <-- adapte cette route à ton backend
 
       return res.data; // On suppose que res.data contient la liste des structures
     } catch (err) {

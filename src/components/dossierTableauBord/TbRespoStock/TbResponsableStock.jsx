@@ -15,7 +15,7 @@ import { saveAs } from "file-saver";
 import Graphe2QteExpirer from "./graphe2QteExpirer";
 import Graphe3QteQuotidienneJrs from "./graphe3QteQuotidienneJrs";
 import Graphe5QteQuotidienneAnnee from "./graphe5QteQuotidienneAnnee";
-import Graphe6ProduitPlusVendu from "./graphe6ProduitPlusVendu";
+// import Graphe6ProduitPlusVendu from "./graphe6ProduitPlusVendu";
 import Graphe6MontantQuotidienneAnnee from "./graphe6MontantQuotidienneAnnee";
 import Graphe4MontantQuotidienneJrs from "./graphe4MontantQuotidienneJrs";
 import Graphe8MontantQuotidienneMois from "./graphe8MontantQuotidienneMois";
@@ -35,7 +35,7 @@ const DashboardResponsable = () => {
     stateDetailQuantiteQuantiteNonDetruite,
   } = useLogiqueTbResponsableStock();
   // État pour la période sélectionnée
-  const [periode, setPeriode] = useState("mois");
+  const [periode, setPeriode] = useState("jour");
 
   const [showModal, setShowModal] = useState(false);
   const [modalData, setModalData] = useState({ title: "", value: 0 });
@@ -205,24 +205,16 @@ const DashboardResponsable = () => {
   return (
     <div>
       {/* Filtres en haut */}
-      <div className="d-flex justify-content-between align-items-center mb-4">
-        <h4>📊 Tableau de bord - Responsable de Stock</h4>
-        <div className="d-flex align-items-center">
-          <label className="me-2 fw-bold">Filtrer par :</label>
-          <select
-            className="form-select"
-            style={{ width: "200px" }}
-            value={periode}
-            onChange={handleChangePeriode}
-          >
-            <option value="jour">Jour</option>
-            <option value="mois">Mois</option>
-            <option value="trimestre">Trimestre</option>
-            <option value="annee">Année</option>
-          </select>
-        </div>
+      <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4">
+        <h5>📊 Tableau de bord - Responsable de Stock</h5>
       </div>
       <div className="row mb-4 g-3">
+        {/* <InfoCardTbResponsable
+          title="📦 Stock dispo"
+          value={stateQteDisponible?.quantiteDisponibleFinal}
+          gradient="linear-gradient(135deg, #4CAF50, #81C784)"
+          handleOpenModal={handleOpenModal}
+        /> */}
         <InfoCardTbResponsable
           title="📦 Stock dispo"
           value={stateQteDisponible?.quantiteDisponibleFinal}
@@ -265,7 +257,7 @@ const DashboardResponsable = () => {
       {/* Tableau des mouvements en attente */}
       <div className="card mb-4 shadow-sm">
         <div className="card-header bg-primary text-white">
-          Mouvements à valider
+          Produit à valider
         </div>
         <div className="card-body">
           <ControleInventaire />
@@ -276,46 +268,57 @@ const DashboardResponsable = () => {
 
       {/* Graphiques */}
       <div className="row">
-        <div className="col-md-6 mb-4">
+        <div className="col-md-12 mb-4">
           <Graphe1Quantite />
         </div>
 
-        <div className="col-md-6 mb-4">
+        <div className="col-md-12 mb-4">
           <Graphe2QteExpirer />
         </div>
       </div>
       <div className="row">
-        <div className="col-md-6 mb-4">
+        {/* <div className="col-md-6 mb-4">
           <Graphe3QteQuotidienneJrs />
+          <Graphe7QteQuotidienneMois />
+          <Graphe5QteQuotidienneAnnee />
         </div>
         <div className="col-md-6 mb-4">
           <Graphe4MontantQuotidienneJrs />
-        </div>
-       
-        
-      </div>
-      <div className="row">
- <div className="col-md-6 mb-4">
-          <Graphe7QteQuotidienneMois />
-        </div>
-         <div className="col-md-6 mb-4">
           <Graphe8MontantQuotidienneMois />
-        </div>
-      </div>
-      <div className="row">
-        <div className="col-md-6 mb-4">
-          <Graphe5QteQuotidienneAnnee />
-        </div>
-         <div className="col-md-6 mb-4">
           <Graphe6MontantQuotidienneAnnee />
+        </div> */}
+        <div className="mt-2 mt-md-0 d-flex align-items-left">
+          <label className="me-2 fw-bold">Filtrer par :</label>
+          <select
+            className="form-select"
+            style={{ width: "200px" }}
+            value={periode}
+            onChange={handleChangePeriode}
+          >
+            <option value="jour">Jour</option>
+            <option value="mois">Mois</option>
+            <option value="annee">Année</option>
+          </select>
         </div>
-        
+        <br />
+        <br />
+        <div className="col-md-6 mb-4">
+          {periode === "jour" && <Graphe3QteQuotidienneJrs />}
+          {periode === "mois" && <Graphe7QteQuotidienneMois />}
+          {periode === "annee" && <Graphe5QteQuotidienneAnnee />}
+        </div>
+
+        <div className="col-md-6 mb-4">
+          {periode === "jour" && <Graphe4MontantQuotidienneJrs />}
+          {periode === "mois" && <Graphe8MontantQuotidienneMois />}
+          {periode === "annee" && <Graphe6MontantQuotidienneAnnee />}
+        </div>
       </div>
-      <div className="row">
+      {/* <div className="row">
         <div className="col-md-12 mb-4">
           <Graphe6ProduitPlusVendu />
         </div>
-       </div>
+      </div> */}
       {/* 🪟 MODAL DYNAMIQUE */}
       <Modal
         show={showModal}

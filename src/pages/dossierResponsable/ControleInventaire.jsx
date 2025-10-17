@@ -74,7 +74,7 @@ function ControleInventaire() {
   };
   useSocketProduit();
   return (
-    <div>
+    <div style={{ overflowX: "auto" }}>
       <h5>Vérification des produits entrants</h5>
       <table style={{ width: "100%", borderCollapse: "collapse" }}>
         <thead>

@@ -1,16 +1,14 @@
-import React from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import {
-  LineChart,
-  Line,
+  BarChart,
+  Bar,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
   Legend,
   ResponsiveContainer,
-  BarChart,
-  Bar,
   Rectangle,
   LabelList,
 } from "recharts";
@@ -20,10 +18,35 @@ function Graphe3QteQuotidienneJrs() {
     (state) => state.tableauBord
   );
 
+  const containerRef = useRef();
+  const [width, setWidth] = useState(0);
+
+  // Hook pour détecter la largeur du conteneur
+  useEffect(() => {
+    const observer = new ResizeObserver((entries) => {
+      for (let entry of entries) {
+        setWidth(entry.contentRect.width);
+      }
+    });
+
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
+
+    return () => {
+      if (containerRef.current) {
+        observer.unobserve(containerRef.current);
+      }
+    };
+  }, []);
+
+  // Ajuster la taille du texte selon la largeur
+  const fontSize = width < 400 ? 10 : width < 600 ? 12 : 14;
+
   return (
-    <div className="card shadow-sm">
+    <div className="card shadow-sm" ref={containerRef}>
       <div className="card-header bg-secondary text-white">
-        📊
+        📊{" "}
         <span style={{ fontSize: 18 }}>
           Tendance journalière des ventes (en quantité)
         </span>
@@ -31,40 +54,31 @@ function Graphe3QteQuotidienneJrs() {
       <div className="card-body">
         <ResponsiveContainer width="100%" height={300}>
           <BarChart
-            width={500}
-            height={300}
             data={stateEvaluationVenteParJour}
             margin={{
               top: 20,
-              right: 30,
-              left: 20,
-              bottom: 5,
+              right: 20,
+              left: 10,
+              bottom: 10,
             }}
           >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="jours" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            
+            <XAxis dataKey="jours" tick={{ fontSize }} />
+            <YAxis tick={{ fontSize }} />
+            <Tooltip wrapperStyle={{ fontSize }} />
+            <Legend wrapperStyle={{ fontSize }} />
             <Bar
               dataKey="qte_vendu"
               fill="#086905ff"
               activeBar={<Rectangle fill="gold" stroke="purple" />}
             >
-              {/* 🔹 Afficher la quantité au-dessus de chaque barre */}
-              
-
-               <LabelList
-                              dataKey="qte_vendu"
-                              position="insideTop"
-                              fill="#fff" // blanc pour être lisible sur fond bleu
-                              fontSize={14}
-                              fontWeight="bold"
-                              formatter={(value) =>
-                                value.toLocaleString("fr-FR")  // formatage avec "F"
-                              }
-                            />
+              <LabelList
+                dataKey="qte_vendu"
+                position="top"
+                fill="#333"
+                fontSize={fontSize}
+                formatter={(value) => value.toLocaleString("fr-FR")}
+              />
             </Bar>
           </BarChart>
         </ResponsiveContainer>

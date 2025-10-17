@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import {
   LineChart,
@@ -9,10 +9,6 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
-  BarChart,
-  Bar,
-  Rectangle,
-  LabelList,
 } from "recharts";
 
 function Graphe7QteQuotidienneMois() {
@@ -20,53 +16,56 @@ function Graphe7QteQuotidienneMois() {
     (state) => state.tableauBord
   );
 
+  const containerRef = useRef();
+  const [width, setWidth] = useState(0);
+
+  // Suivre dynamiquement la largeur du conteneur
+  useEffect(() => {
+    const observer = new ResizeObserver(([entry]) => {
+      setWidth(entry.contentRect.width);
+    });
+
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
+
+    return () => {
+      if (containerRef.current) observer.unobserve(containerRef.current);
+    };
+  }, []);
+
+  const fontSize = width < 400 ? 10 : width < 600 ? 12 : 14;
+  const chartHeight = Math.max(250, Math.min(400, width * 0.5));
+
   return (
-    <div className="card shadow-sm">
+    <div className="card shadow-sm" ref={containerRef}>
       <div className="card-header bg-secondary text-white">
-        📊
+        📊{" "}
         <span style={{ fontSize: 18 }}>
           Tendance mensuelle des ventes (en quantité)
         </span>
       </div>
       <div className="card-body">
-        <ResponsiveContainer width="100%" height={300}>
-          <BarChart
-            width={500}
-            height={300}
+        <ResponsiveContainer width="100%" height={chartHeight}>
+          <LineChart
             data={stateEvaluationVenteParMois}
-            margin={{
-              top: 20,
-              right: 30,
-              left: 20,
-              bottom: 5,
-            }}
+            margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
           >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="mois" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            
-            <Bar
+            <XAxis dataKey="mois" tick={{ fontSize }} />
+            <YAxis tick={{ fontSize }} />
+            <Tooltip wrapperStyle={{ fontSize }} />
+            <Legend wrapperStyle={{ fontSize }} />
+            <Line
+              type="monotone"
               dataKey="qte_vendu"
+              stroke="#086905ff"
               fill="#086905ff"
-              activeBar={<Rectangle fill="gold" stroke="purple" />}
-            >
-              {/* 🔹 Afficher la quantité au-dessus de chaque barre */}
-              
-
-               <LabelList
-                              dataKey="qte_vendu"
-                              position="insideTop"
-                              fill="#fff" // blanc pour être lisible sur fond bleu
-                              fontSize={14}
-                              fontWeight="bold"
-                              formatter={(value) =>
-                                value.toLocaleString("fr-FR")  // formatage avec "F"
-                              }
-                            />
-            </Bar>
-          </BarChart>
+              strokeWidth={3}
+              dot={{ r: 4 }}
+              activeDot={{ r: 6 }}
+            />
+          </LineChart>
         </ResponsiveContainer>
       </div>
     </div>

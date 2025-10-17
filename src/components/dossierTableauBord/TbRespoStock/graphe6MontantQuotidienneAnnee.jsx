@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import {
   XAxis,
@@ -18,8 +18,28 @@ function Graphe6MontantQuotidienneAnnee() {
     (state) => state.tableauBord
   );
 
+  const containerRef = useRef();
+  const [width, setWidth] = useState(0);
+
+  // Observer la largeur du conteneur
+  useEffect(() => {
+    const observer = new ResizeObserver(([entry]) => {
+      setWidth(entry.contentRect.width);
+    });
+
+    if (containerRef.current) observer.observe(containerRef.current);
+
+    return () => {
+      if (containerRef.current) observer.unobserve(containerRef.current);
+    };
+  }, []);
+
+  // Taille du texte et hauteur du graphe adaptées à la largeur
+  const fontSize = width < 400 ? 10 : width < 600 ? 12 : 14;
+  const chartHeight = Math.max(250, Math.min(400, width * 0.5));
+
   return (
-    <div className="card shadow-sm">
+    <div className="card shadow-sm" ref={containerRef}>
       <div className="card-header bg-secondary text-white">
         📊{" "}
         <span style={{ fontSize: 18 }}>
@@ -28,37 +48,36 @@ function Graphe6MontantQuotidienneAnnee() {
       </div>
 
       <div className="card-body">
-        <ResponsiveContainer width="100%" height={300}>
+        <ResponsiveContainer width="100%" height={chartHeight}>
           <BarChart
             data={stateEvaluationVenteParAnnee}
             margin={{
               top: 20,
-              right: 30,
-              left: 20,
-              bottom: 5,
+              right: 20,
+              left: 10,
+              bottom: 10,
             }}
           >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="annee" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
+            <XAxis dataKey="annee" tick={{ fontSize }} />
+            <YAxis tick={{ fontSize }} />
+            <Tooltip wrapperStyle={{ fontSize }} />
+            <Legend wrapperStyle={{ fontSize }} />
 
             <Bar
               dataKey="total_vendu"
               fill="#007bff"
-              radius={[10, 10, 0, 0]} // coins arrondis (optionnel)
+              radius={[10, 10, 0, 0]}
               activeBar={<Rectangle fill="pink" stroke="blue" />}
             >
-              {/* 🔹 Afficher le montant à l’intérieur de la barre */}
               <LabelList
                 dataKey="total_vendu"
-                position="insideTop"
-                fill="#fff" // blanc pour être lisible sur fond bleu
-                fontSize={14}
+                position="top"
+                fill="#333"
+                fontSize={fontSize}
                 fontWeight="bold"
                 formatter={(value) =>
-                  value.toLocaleString("fr-FR") + " F" // formatage avec "F"
+                  value.toLocaleString("fr-FR") + " F"
                 }
               />
             </Bar>

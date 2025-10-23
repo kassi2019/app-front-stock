@@ -1,16 +1,14 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import {
+  LineChart,
+  Line,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
   Legend,
   ResponsiveContainer,
-  BarChart,
-  Bar,
-  Rectangle,
-  LabelList,
 } from "recharts";
 
 function Graphe4MontantQuotidienneJrs() {
@@ -21,21 +19,19 @@ function Graphe4MontantQuotidienneJrs() {
   const containerRef = useRef();
   const [width, setWidth] = useState(0);
 
-  // Observer la taille du conteneur pour adapter le style
+  // Observer la largeur du conteneur pour adapter la taille
   useEffect(() => {
-    const observer = new ResizeObserver((entries) => {
-      for (let entry of entries) {
-        setWidth(entry.contentRect.width);
-      }
+    const observer = new ResizeObserver(([entry]) => {
+      setWidth(entry.contentRect.width);
     });
 
     if (containerRef.current) observer.observe(containerRef.current);
+
     return () => {
       if (containerRef.current) observer.unobserve(containerRef.current);
     };
   }, []);
 
-  // Taille de texte dynamique
   const fontSize = width < 400 ? 10 : width < 600 ? 12 : 14;
   const chartHeight = Math.max(250, Math.min(400, width * 0.5));
 
@@ -44,43 +40,35 @@ function Graphe4MontantQuotidienneJrs() {
       <div className="card-header bg-secondary text-white">
         📊{" "}
         <span style={{ fontSize: 18 }}>
-          Tendance journalière des ventes (en Montant)
+         Tendance journalière des ventes (en Montant)
         </span>
       </div>
-
       <div className="card-body">
         <ResponsiveContainer width="100%" height={chartHeight}>
-          <BarChart
+          <LineChart
             data={stateEvaluationVenteParJour}
-            margin={{
-              top: 20,
-              right: 20,
-              left: 10,
-              bottom: 10,
-            }}
+            margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
           >
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="jours" tick={{ fontSize }} />
             <YAxis tick={{ fontSize }} />
             <Tooltip wrapperStyle={{ fontSize }} />
             <Legend wrapperStyle={{ fontSize }} />
-
-            <Bar
+            <Line
+              type="monotone"
               dataKey="total_vendu"
-              fill="#007bff"
-              radius={[10, 10, 0, 0]}
-              activeBar={<Rectangle fill="pink" stroke="blue" />}
-            >
-              <LabelList
-                dataKey="total_vendu"
-                position="top" // Plus visible sur mobile
-                fill="#333"
-                fontSize={fontSize}
-                fontWeight="bold"
-                formatter={(value) => value.toLocaleString("fr-FR") + " F"}
-              />
-            </Bar>
-          </BarChart>
+              stroke="#007bff"
+              strokeWidth={3}
+              dot={{ r: 4 }}
+              activeDot={{ r: 6 }}
+              label={{
+                position: "top",
+                fill: "#333",
+                fontSize,
+                formatter: (value) => value.toLocaleString("fr-FR") + " F",
+              }}
+            />
+          </LineChart>
         </ResponsiveContainer>
       </div>
     </div>

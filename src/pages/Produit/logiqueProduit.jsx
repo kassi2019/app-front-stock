@@ -94,7 +94,7 @@ export const useLogiqueProduit = () => {
   const handleChangeUnitaire = (e) => setUnitaire(e.target.value);
   // 🔹 Soumettre le formulaire (ajout ou modification)
 
-  const tailleProduit = "PROD" + "-" + "0" + (parseInt(NombreProduit) + 1);
+  const tailleProduit = "P" + "-" + "0" + (parseInt(NombreProduit) + 1);
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -241,10 +241,34 @@ export const useLogiqueProduit = () => {
                     color: "white",
                   }}
                 >
-                  <th style={{ width: "10%",backgroundColor: "rgba(21, 162, 244, 1)", color: "white" }}>Code</th>
-                  <th style={{ width: "50%",backgroundColor: "rgba(21, 162, 244, 1)", color: "white" }}>Libellé</th>
+                  <th
+                    style={{
+                      width: "10%",
+                      backgroundColor: "rgba(21, 162, 244, 1)",
+                      color: "white",
+                    }}
+                  >
+                    Code
+                  </th>
+                  <th
+                    style={{
+                      width: "50%",
+                      backgroundColor: "rgba(21, 162, 244, 1)",
+                      color: "white",
+                    }}
+                  >
+                    Libellé
+                  </th>
 
-                  <th style={{ width: "10%" ,backgroundColor: "rgba(21, 162, 244, 1)", color: "white"}}>Prix unitaire</th>
+                  <th
+                    style={{
+                      width: "10%",
+                      backgroundColor: "rgba(21, 162, 244, 1)",
+                      color: "white",
+                    }}
+                  >
+                    Prix unitaire
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -370,7 +394,6 @@ export const useLogiqueProduit = () => {
   };
   // 🟢 Fonction pour modifier un lot
   const handleModifierLot = (lot) => {
-    
     setModalState3({
       show: true,
       title: "Modifier le lot",
@@ -474,8 +497,6 @@ export const useLogiqueProduit = () => {
       ),
     });
   };
-
-
 
   // Fermer le modal
 

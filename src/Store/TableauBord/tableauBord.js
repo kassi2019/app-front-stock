@@ -11,10 +11,9 @@ import {
   DetailQuantiteExpirationAujourdHui,
   DetailQuantiteQuantiteDetruite,
   DetailQuantiteQuantiteNonDetruite,
-
   AfficherEvolutionVenteParJours,
   AfficherEvolutionVenteParMois,
-  AfficherEvolutionVenteParAnnee
+  AfficherEvolutionVenteParAnnee,
 } from "../../Service/tableauBord.js";
 
 const tableauBordSlice = createSlice({
@@ -26,11 +25,9 @@ const tableauBordSlice = createSlice({
     stateQteRentrantParMois: [],
     stateProduitExpire: [],
 
-
     stateEvaluationVenteParJour: [],
     stateEvaluationVenteParMois: [],
     stateEvaluationVenteParAnnee: [],
-
 
     stateDetaiQuantiteDisponible: [],
     stateDetaiQuantiteEnAttente: [],
@@ -38,6 +35,9 @@ const tableauBordSlice = createSlice({
     stateDetailQuantiteExpirationAujourdHui: [],
     stateDetailQuantiteQuantiteDetruite: [],
     stateDetailQuantiteQuantiteNonDetruite: [],
+
+    stateEvolutionQteVenduParJoursCaissier: [],
+    stateEvolutionMontantVenduParJoursCaissier: [],
 
     loading: false,
     error: null,
@@ -196,9 +196,6 @@ const tableauBordSlice = createSlice({
         state.loading = false;
         state.error = action.payload.data;
       })
-
-
-    
       .addCase(AfficherEvolutionVenteParJours.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -212,9 +209,8 @@ const tableauBordSlice = createSlice({
         state.loading = false;
         state.error = action.payload.data;
       })
-    
-    
-    .addCase(AfficherEvolutionVenteParMois.pending, (state) => {
+
+      .addCase(AfficherEvolutionVenteParMois.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
@@ -227,9 +223,8 @@ const tableauBordSlice = createSlice({
         state.loading = false;
         state.error = action.payload.data;
       })
-    
-    
-    .addCase(AfficherEvolutionVenteParAnnee.pending, (state) => {
+
+      .addCase(AfficherEvolutionVenteParAnnee.pending, (state) => {
         state.loading = true;
         state.error = null;
       })

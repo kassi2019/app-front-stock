@@ -1,6 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import api from "./axios";
 
+/************************************DEBUT TABLEAU BORD RESPONSABLE***********************************************/
 export const afficherQteDisponible = createAsyncThunk(
   "afficherQteDisponible/afficherQteDisponible",
   async (_, thunkAPI) => {
@@ -213,3 +214,41 @@ export const AfficherEvolutionVenteParAnnee = createAsyncThunk(
     }
   }
 );
+/************************************FIN TABLEAU BORD RESPONSABLE***********************************************/
+
+/************************************DEBUT TABLEAU BORD CAISSIER***********************************************/
+
+export const afficherResultatPan = createAsyncThunk(
+  "afficherPan/afficherPan",
+  async (_, thunkAPI) => {
+    try {
+      const res = await api.get("/tableau-bord/pan-caissier"); // <-- adapte cette route à ton backend
+
+      return res.data; // On suppose que res.data contient la liste des structures
+    } catch (err) {
+      return thunkAPI.rejectWithValue(
+        err.response?.data || "Erreur lors de la récupération"
+      );
+    }
+  }
+);
+
+export const evolutionParJoursCaissier = createAsyncThunk(
+  "afficherQuantite/afficherQuantite",
+  async (_, thunkAPI) => {
+    try {
+      const res = await api.get(
+        "/tableau-bord/evolution-par-jour-par-caissier"
+      ); // <-- adapte cette route à ton backend
+
+      return res.data; // On suppose que res.data contient la liste des structures
+    } catch (err) {
+      return thunkAPI.rejectWithValue(
+        err.response?.data || "Erreur lors de la récupération"
+      );
+    }
+  }
+);
+
+
+/************************************FIN TABLEAU BORD RESPONSABLE***********************************************/

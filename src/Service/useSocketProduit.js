@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { io } from "socket.io-client";
 import { useDispatch } from "react-redux";
 import { listeProduit, listeProduitProvisoire } from "./produit"; // ton action redux
+import { AfficherProduitExpirer } from "./tableauBord";
 // import {
 //   AfficherQuantiteEnAttente,
 //   AfficherQuantiteExpirer,
@@ -25,6 +26,7 @@ export const useSocketProduit = () => {
     socket.on("produitstockUpdated", (produitstock) => {
       console.log("Produit mis à jour:", produitstock);
       dispatch(listeProduitProvisoire());
+      dispatch(AfficherProduitExpirer());
     });
 
     // socket.on("majTableauBord", (data) => {

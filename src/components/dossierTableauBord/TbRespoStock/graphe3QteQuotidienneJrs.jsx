@@ -1,16 +1,14 @@
 import React, { useRef, useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import {
-  BarChart,
-  Bar,
+  LineChart,
+  Line,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
   Legend,
   ResponsiveContainer,
-  Rectangle,
-  LabelList,
 } from "recharts";
 
 function Graphe3QteQuotidienneJrs() {
@@ -21,12 +19,10 @@ function Graphe3QteQuotidienneJrs() {
   const containerRef = useRef();
   const [width, setWidth] = useState(0);
 
-  // Hook pour détecter la largeur du conteneur
+  // Suivre dynamiquement la largeur du conteneur
   useEffect(() => {
-    const observer = new ResizeObserver((entries) => {
-      for (let entry of entries) {
-        setWidth(entry.contentRect.width);
-      }
+    const observer = new ResizeObserver(([entry]) => {
+      setWidth(entry.contentRect.width);
     });
 
     if (containerRef.current) {
@@ -34,14 +30,12 @@ function Graphe3QteQuotidienneJrs() {
     }
 
     return () => {
-      if (containerRef.current) {
-        observer.unobserve(containerRef.current);
-      }
+      if (containerRef.current) observer.unobserve(containerRef.current);
     };
   }, []);
 
-  // Ajuster la taille du texte selon la largeur
   const fontSize = width < 400 ? 10 : width < 600 ? 12 : 14;
+  const chartHeight = Math.max(250, Math.min(400, width * 0.5));
 
   return (
     <div className="card shadow-sm" ref={containerRef}>
@@ -52,35 +46,26 @@ function Graphe3QteQuotidienneJrs() {
         </span>
       </div>
       <div className="card-body">
-        <ResponsiveContainer width="100%" height={300}>
-          <BarChart
+        <ResponsiveContainer width="100%" height={chartHeight}>
+          <LineChart
             data={stateEvaluationVenteParJour}
-            margin={{
-              top: 20,
-              right: 20,
-              left: 10,
-              bottom: 10,
-            }}
+            margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
           >
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="jours" tick={{ fontSize }} />
             <YAxis tick={{ fontSize }} />
             <Tooltip wrapperStyle={{ fontSize }} />
             <Legend wrapperStyle={{ fontSize }} />
-            <Bar
+            <Line
+              type="monotone"
               dataKey="qte_vendu"
+              stroke="#086905ff"
               fill="#086905ff"
-              activeBar={<Rectangle fill="gold" stroke="purple" />}
-            >
-              <LabelList
-                dataKey="qte_vendu"
-                position="top"
-                fill="#333"
-                fontSize={fontSize}
-                formatter={(value) => value.toLocaleString("fr-FR")}
-              />
-            </Bar>
-          </BarChart>
+              strokeWidth={3}
+              dot={{ r: 4 }}
+              activeDot={{ r: 6 }}
+            />
+          </LineChart>
         </ResponsiveContainer>
       </div>
     </div>

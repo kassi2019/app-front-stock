@@ -13,18 +13,23 @@ function Produit() {
     actions,
     columns,
     codeLotProduit,
+    stateFournisseur,
     // Modal et champs
     isModalOpen,
     isModalOpenLot,
+    isModalOpenAjouterLot,
     isEditing,
+    editingId,
     unitaire,
     handleAjouter,
     handleCloseModal,
     handleCloseModalLot,
+    handleCloseModalAjouterLot,
     handleChangePrixUnitaire,
     handleChangeUnitaire,
     prixUnitaire,
     libelle,
+    code,
     handleChangeNiveau,
     handleChangeLibelle,
     handleSubmit,
@@ -34,6 +39,19 @@ function Produit() {
     modalState3,
     setModalState2,
     setModalState3,
+    CodeLotProduit,
+
+    totalQuantite,
+    handleChangeQuantite,
+    quantiteActuelle,
+    quantiteLot1,
+    handleChangePrixAchat,
+    prixAchat,
+    handleChangeDateExpiration,
+    dateExpiration,
+    fournisseur,
+    handleChangeSelectFournisseur,
+    EnregistrementProduitLot,
   } = useLogiqueProduit();
 
   return (
@@ -41,7 +59,7 @@ function Produit() {
       <div className="d-flex justify-content-between align-items-center mb-3">
         <h5 className="mb-0">Liste des Produits</h5>
         <button className="btn btn-success" onClick={() => handleAjouter()}>
-          + Ajouter
+          + Ajouter Produit
         </button>
       </div>
       <TableGlobal data={stateProduit} columns={columns} actions={actions} />
@@ -107,6 +125,41 @@ function Produit() {
       >
         {modalState3.content}
       </ModalPetit>
+
+      <ModalXL
+        show={isModalOpenAjouterLot}
+        onClose={handleCloseModalAjouterLot}
+        title={editingId ? "Ajouter Lot de Produits" : "Ajouter un Produits"}
+      >
+        <FormLotProduit
+          nombreProduit={tailleProduit}
+          codeLotProduit={CodeLotProduit}
+          produitCode={code}
+          produitLibelle={libelle}
+          totalQuantite={totalQuantite}
+          prixUnitaireProduit={prixUnitaire}
+          prixAchat={prixAchat}
+          onChangePrixAchat={handleChangePrixAchat}
+          qteDisponible={quantiteActuelle}
+          onChangeprixUnitaire={handleChangePrixUnitaire}
+          onChangeNiveau={handleChangeNiveau}
+          onChangeLibelle={handleChangeLibelle}
+          onChangeQuantite={handleChangeQuantite}
+          quantiteLotProduit={quantiteLot1}
+          unitaire={unitaire}
+          dateExpiration={dateExpiration}
+          onChangeDateExpiration={handleChangeDateExpiration}
+          onChangeUnitaire={handleChangeUnitaire}
+          onSubmit={handleSubmit}
+          onCancel={handleCloseModalAjouterLot}
+          isEditing={editingId}
+          dataFournisseur={stateFournisseur}
+          valeurFournisseur={fournisseur}
+          onChangeFournisseur={handleChangeSelectFournisseur}
+          EnregistrementProduitLot={EnregistrementProduitLot}
+
+        />
+      </ModalXL>
     </div>
   );
 }

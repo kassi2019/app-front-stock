@@ -88,7 +88,7 @@ function Fournisseur() {
       messageErreur("Veuillez remplir tous les champs");
       return;
     }
-    console.log({ editingId });
+
     const formData = {
       nom_fournisseur: libelle,
       telephone: telephone,
@@ -109,7 +109,7 @@ function Fournisseur() {
         //   messageErreur("Ce Code existe déjà.");
         //   return;
         // }
-       
+
         await dispatch(ajouterFournisseur(formData)).unwrap();
         messageSucces("Enregistrement effectué avec succès");
 
@@ -119,7 +119,7 @@ function Fournisseur() {
       messageErreur("Une erreur est survenue !", error);
     }
   };
- 
+
   const confirmerSuppression = async (id) => {
     console.log(id);
     try {
@@ -130,7 +130,7 @@ function Fournisseur() {
       messageErreur("Erreur lors de la suppression", error);
     }
   };
-   const handleSupprimer = (row) => {
+  const handleSupprimer = (row) => {
     setModalState({
       show: true,
       title: "Confirmer la suppression",
@@ -333,7 +333,7 @@ function Fournisseur() {
           isEditing={isEditing}
         />
       </ModalPetit>
-       <ModalPetit
+      <ModalPetit
         show={modalState.show}
         onClose={() => setModalState({ ...modalState, show: false })}
         title={modalState.title}

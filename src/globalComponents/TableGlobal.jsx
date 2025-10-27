@@ -67,16 +67,24 @@ const TableGlobal = ({
                   {actions.map((action, i) => (
                     <button
                       key={i}
-                      className={`underline px-2 py-1 rounded ${
+                      title={action.label} // ✅ infobulle au survol
+                      className={`d-inline-flex align-items-center gap-1 btn btn-sm ${
                         action.color === "blue"
-                          ? "btn btn-sm btn-primary me-2"
+                          ? "btn-primary"
                           : action.color === "red"
-                          ? "btn btn-sm btn-danger"
-                          : "text-gray-700"
-                      }`}
+                          ? "btn-danger"
+                          : action.color === "green"
+                          ? "btn-success"
+                          : "btn-secondary"
+                      } me-2`}
                       onClick={() => action.onClick(row)}
                     >
-                      {action.icon}
+                      {action.icon && (
+                        <span style={{ display: "flex", alignItems: "center" }}>
+                          {action.icon}
+                        </span>
+                      )}
+                      <span>{action.label}</span> {/* ✅ libellé visible */}
                     </button>
                   ))}
                 </td>

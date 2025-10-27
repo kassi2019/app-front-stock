@@ -1,15 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
-
   fournisseurParCategorie,
+  listeFournisseur,
 } from "../../Service/fournisseur.js";
 
 const fournisseurSlice = createSlice({
   name: "structures",
   initialState: {
-  
     stateFournisseurParCategorie: [],
-   
+
     loading: false,
     error: null,
   },
@@ -41,6 +40,24 @@ const fournisseurSlice = createSlice({
           action.payload.data || action.payload;
       })
       .addCase(fournisseurParCategorie.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload.data;
+      })
+
+      .addCase(listeFournisseur.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(listeFournisseur.fulfilled, (state, action) => {
+        state.loading = false;
+
+        state.stateFournisseur = action.payload.data.map((item) => ({
+          value: item.id, // ou item.niveau
+          label: item.nom_fournisseur,
+        }));
+      })
+
+      .addCase(listeFournisseur.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload.data;
       });

@@ -17,17 +17,26 @@ import {
   afficherInformationLotParProduit,
   afficherSommePrixAchatParProduit,
   afficherSommeQuantiteParProduit,
-
+  nombreLotProduitParId,
+  quantiteActuelProduitParId,
+  ajouterLotProduit,
   //   modifierStructure,
   supprimerProduit,
 } from "../../Service/produit.js";
+import { listeFournisseur } from "../../Service/fournisseur.js";
 import { useSocketProduit } from "../../Service/useSocketProduit.js";
 
 export const useLogiqueProduit = () => {
   const dispatch = useDispatch();
-  const { stateProduit, loading, error } = useSelector(
-    (state) => state.produits
-  );
+  const {
+    stateProduit,
+    loading,
+    error,
+    stateNombreLotProduit,
+    stateQuantiteActuelProduit,
+    
+  } = useSelector((state) => state.produits);
+  const { stateFournisseur } = useSelector((state) => state.fournisseurs);
   const [editingId, setEditingId] = useState(null);
   const [code, setCode] = useState("");
   const [libelle, setLibelle] = useState("");
@@ -37,6 +46,12 @@ export const useLogiqueProduit = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [NombreProduit, setNombreProduit] = useState(0);
+  const [isModalOpenAjouterLot, setIsModalOpenAjouterLot] = useState(false);
+  const [quantiteActuelle, setquantiteActuelle] = useState(false);
+  const [quantiteLot1, setQuantiteLot1] = useState("0");
+  const [prixAchat, setPrixAchat] = useState("");
+  const [fournisseur, setSelectFournisseur] = useState(null);
+  const [dateExpiration, setDateExpiration] = useState("");
 
   // const [infoLotProduit, setinfoLotProduit] = useState(0);
   const [modalState, setModalState] = useState({
@@ -54,6 +69,20 @@ export const useLogiqueProduit = () => {
     title: "",
     content: null,
   });
+  const handleChangeSelectFournisseur = (e) => {
+    const selectedId = e;
+    setSelectFournisseur(selectedId);
+  };
+  // const handleChangeQuantite = (text) => {
+  //   // si l'utilisateur tape, on remplace le 0 initial
+  //   if (quantiteLot1 === "0" && text !== "") {
+  //     setQuantiteLot1(text);
+  //   } else {
+  //     setQuantiteLot1(text);
+  //   }
+  // };
+  const handleChangeQuantite = (e) => setQuantiteLot1(e.target.value);
+  console.log({ stateFournisseur });
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setCode("");
@@ -63,6 +92,7 @@ export const useLogiqueProduit = () => {
     setUnitaire("");
     setEditingId(null);
   };
+  useEffect(() => {}, [dispatch]);
 
   // useEffect(() => {
   //   const interval = setInterval(() => {
@@ -76,15 +106,27 @@ export const useLogiqueProduit = () => {
 
   useEffect(() => {
     dispatch(listeProduit());
+    dispatch(listeFournisseur());
     setNombreProduit(stateProduit.length);
+    if (editingId) {
+      dispatch(nombreLotProduitParId(editingId));
+      dispatch(quantiteActuelProduitParId(editingId));
+      setquantiteActuelle(stateQuantiteActuelProduit);
+    }
 
     // if (infoLotProduit > 0) {
     //   dispatch(afficherInformationLotParProduit(infoLotProduit));
     // }
-  }, [dispatch, stateProduit.length]);
+  }, [dispatch, stateProduit.length, editingId, stateQuantiteActuelProduit]);
 
   // 2. Activer la mise à jour en temps réel
   useSocketProduit();
+
+  const CodeLotProduit =
+    "LOT" + "-" + "000000" + (parseInt(stateNombreLotProduit) + 1);
+
+  const totalQuantite =
+    parseInt(stateQuantiteActuelProduit) + parseInt(quantiteLot1);
 
   // 🔹 Gestion des changements dans les inputs
   const handleChangeCode = (e) => setCode(e.target.value);
@@ -93,7 +135,9 @@ export const useLogiqueProduit = () => {
   const handleChangePrixUnitaire = (e) => setPrixUnitaire(e.target.value);
   const handleChangeUnitaire = (e) => setUnitaire(e.target.value);
   // 🔹 Soumettre le formulaire (ajout ou modification)
+  const handleChangePrixAchat = (e) => setPrixAchat(e.target.value);
 
+  const handleChangeDateExpiration = (e) => setDateExpiration(e.target.value);
   const tailleProduit = "P" + "-" + "0" + (parseInt(NombreProduit) + 1);
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -158,6 +202,28 @@ export const useLogiqueProduit = () => {
     setIsEditing(true);
     setIsModalOpen(true);
   };
+
+  const handleAjouteLot = (row) => {
+    setEditingId(row.id);
+    setCode(row.code);
+    setLibelle(row.libelle);
+    setCodeBarre(row.codeBarre);
+    setPrixUnitaire(row.prix_unitaire);
+    setIsEditing(true);
+    setIsModalOpenAjouterLot(true);
+    // const data = afficherInformationLotParProduit(row.id);
+    // const data = await afficherInformationLotParProduit(row.id);
+  };
+
+  const handleCloseModalAjouterLot = () => {
+    setIsModalOpenAjouterLot(false);
+    setCode("");
+    setLibelle("");
+    setCodeBarre("");
+    setPrixUnitaire("");
+    setUnitaire("");
+    setEditingId(null);
+  };
   const confirmerSuppression = async (id) => {
     console.log(id);
     try {
@@ -168,7 +234,35 @@ export const useLogiqueProduit = () => {
       messageErreur("Erreur lors de la suppression", error);
     }
   };
+  const EnregistrementProduitLot = async (e) => {
+    e.preventDefault();
 
+    if (!quantiteLot1 || !prixAchat) {
+      messageErreur("Veuillez remplir tous les champs");
+      return;
+    }
+
+    const formData = {
+      produit_id: editingId,
+      code_lot: CodeLotProduit,
+      expiration_date: dateExpiration,
+      quantite: Number(quantiteLot1),
+      prix_achat: Number(prixAchat),
+      fournisseur_id: Number(fournisseur),
+    };
+    // console.log(formData);
+    try {
+      await dispatch(ajouterLotProduit(formData)).unwrap();
+      messageSucces("Enregistrement effectué avec succès");
+      setQuantiteLot1("");
+      setPrixAchat("");
+      setSelectFournisseur("");
+      setDateExpiration("");
+      handleCloseModalAjouterLot();
+    } catch (error) {
+      messageErreur("Une erreur est survenue !", error);
+    }
+  };
   // Ouvrir le modal Supprimer
   const handleSupprimer = (row) => {
     setModalState({
@@ -525,29 +619,37 @@ export const useLogiqueProduit = () => {
     {
       key: "code_barre",
       title: "Code Barre",
-      width: "20%",
+      width: "10%",
     },
   ];
   const actions = [
     // {
     //   label: "Modifier",
-    //   color: "#FFC107",
+    //   color: "blue",
     //   icon: Icons.edit,
     //   onClick: (row) => {
     //     handleModifier(row);
     //   },
     // },
     {
-      label: "Voir Lot",
+      label: "Ajouter Lot",
+      color: "green",
+      // icon: Icons.edit,
+      onClick: (row) => {
+        handleAjouteLot(row);
+      },
+    },
+    {
+      //label: "Voir Lot",
       title: "Voir Lot",
-      color: "hsla(252, 93%, 29%, 1.00)",
+      color: "blue",
       icon: Icons.view,
       onClick: (row) => {
         handleDetail(row);
       },
     },
     {
-      label: "Supprimer",
+      // label: "Supprimer",
       color: "red",
       icon: Icons.delete,
       onClick: (row) => {
@@ -559,6 +661,7 @@ export const useLogiqueProduit = () => {
   return {
     tailleProduit,
     stateProduit,
+    stateFournisseur,
     loading,
     error,
     actions,
@@ -568,16 +671,24 @@ export const useLogiqueProduit = () => {
     libelle,
     codeBarre,
     prixUnitaire,
+    CodeLotProduit,
     unitaire,
     handleChangeUnitaire,
     handleChangeCode,
     handleChangeLibelle,
     handleChangeCodeBarre,
     handleChangePrixUnitaire,
+    handleChangePrixAchat,
+    prixAchat,
     handleSubmit,
+    handleCloseModalAjouterLot,
+    handleChangeDateExpiration,
+    dateExpiration,
     // Modal
     isModalOpen,
+    isModalOpenAjouterLot,
     isEditing,
+    editingId,
     handleAjouter,
     handleModifier,
     handleSupprimer,
@@ -587,5 +698,13 @@ export const useLogiqueProduit = () => {
     setModalState2,
     modalState2,
     modalState3,
+
+    totalQuantite,
+    handleChangeQuantite,
+    quantiteActuelle,
+    quantiteLot1,
+    fournisseur,
+    handleChangeSelectFournisseur,
+    EnregistrementProduitLot,
   };
 };

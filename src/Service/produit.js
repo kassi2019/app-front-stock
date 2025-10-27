@@ -75,7 +75,22 @@ export const supprimerProduit = createAsyncThunk(
 //     }
 //   }
 // );
+// export const afficherInformationLotParProduit = createAsyncThunk(
 
+//   "LotParProduit/LotParProduit",
+//   async ({ idProduit }, thunkAPI) => {
+//     console.log({idProduit});
+//     try {
+//       const res = await api.get(
+//         `/produit/informationProduit/${idProduit}`
+//       );
+//       return res.data;
+//     } catch (error) {
+//       console.error("Erreur API lots :", error);
+//       return thunkAPI.rejectWithValue(error.response?.data || "Erreur serveur");
+//     }
+//   }
+// );
 export const afficherInformationLotParProduit = async (idProduit) => {
   try {
     const res = await api.get(`/produit/informationProduit/${idProduit}`);
@@ -202,14 +217,11 @@ export const mettreAJourQuantiteTheorique = createAsyncThunk(
   }
 );
 
-
 export const RamenerQuantiteTheorique = createAsyncThunk(
   "produitramener/produitramener",
   async ({ idlot }, thunkAPI) => {
     try {
-      const res = await api.get(
-        `/produit/ramenerQuantite/${idlot}`
-      );
+      const res = await api.get(`/produit/ramenerQuantite/${idlot}`);
 
       // recharger la liste des produits après mise à jour
 
@@ -217,6 +229,70 @@ export const RamenerQuantiteTheorique = createAsyncThunk(
     } catch (error) {
       console.error("Erreur API lots :", error);
       return thunkAPI.rejectWithValue(error.response?.data || "Erreur serveur");
+    }
+  }
+);
+
+// export const nombreLotProduitParId = createAsyncThunk(
+//   "nombreL/nombreL",
+//   async ({ idprod }, thunkAPI) => {
+//     console.log({ idprod });
+//     try {
+//       const res = await api.get(`/produit/nombreLotProduitid/${idprod}`);
+
+//       // recharger la liste des produits après mise à jour
+
+//       return res.data;
+//     } catch (error) {
+//       console.error("Erreur API lots :", error);
+//       return thunkAPI.rejectWithValue(error.response?.data || "Erreur serveur");
+//     }
+//   }
+// );
+export const nombreLotProduitParId = createAsyncThunk(
+  "nombreLot/nombreLot",
+  async (idProduit, thunkAPI) => {
+    try {
+      const res = await api.get(`/produit/nombreLotProduitid/${idProduit}`);
+      //   alert(res);
+      return res.data; // on ne garde que le tableau des utilisateurs
+    } catch (err) {
+      return thunkAPI.rejectWithValue(
+        err.response?.data || "Erreur lors de l'affichage"
+      );
+    }
+  }
+);
+
+export const quantiteActuelProduitParId = createAsyncThunk(
+  "quantiteActuellot/quantiteActuellot",
+  async (idProduit, thunkAPI) => {
+    try {
+      const res = await api.get(`/produit/quantiteProduitid/${idProduit}`);
+      //   alert(res);
+      return res.data; // on ne garde que le tableau des utilisateurs
+    } catch (err) {
+      return thunkAPI.rejectWithValue(
+        err.response?.data || "Erreur lors de l'affichage"
+      );
+    }
+  }
+);
+
+export const ajouterLotProduit = createAsyncThunk(
+  "lotProduit/ajouterlotProduit",
+ 
+  async (payload, thunkAPI) => {
+    
+    try {
+      const res = await api.post("/produit/creerLotProduit", payload);
+
+      // thunkAPI.dispatch(fournisseurParCategorie());
+      return res.data; // Données renvoyées par ton controller NestJS
+    } catch (err) {
+      return thunkAPI.rejectWithValue(
+        err.response?.data || "Erreur lors de l'ajout de la categorie"
+      );
     }
   }
 );

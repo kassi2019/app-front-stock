@@ -3,7 +3,10 @@ import {
   listeProduit,
   listeProduitProvisoire,
   listeProduitInventaire,
-  listeProduitValide
+  listeProduitValide,
+  nombreLotProduitParId,
+  quantiteActuelProduitParId,
+  //afficherInformationLotParProduit,
   //   ajouterStructure,
   //   modifierStructure,
   //   supprimerStructure,
@@ -15,7 +18,10 @@ const produitSlice = createSlice({
     stateProduit: [],
     stateProduitProvisoire: [],
     stateProduitInventaire: [],
-    stateProduitValide:[],
+    stateNombreLotProduit: [],
+    stateQuantiteActuelProduit: [],
+    stateProduitValide: [],
+    stateProduitLot: [],
     optionsSelect: [],
     loading: false,
     error: null,
@@ -92,8 +98,8 @@ const produitSlice = createSlice({
         state.loading = false;
         state.error = action.payload.data;
       })
-    
-     .addCase(listeProduitValide.pending, (state) => {
+
+      .addCase(listeProduitValide.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
@@ -108,7 +114,44 @@ const produitSlice = createSlice({
       .addCase(listeProduitValide.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload.data;
-      });
+      })
+
+    
+    
+     .addCase(nombreLotProduitParId.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(nombreLotProduitParId.fulfilled, (state, action) => {
+        state.loading = false;
+        state.stateNombreLotProduit = action.payload; // ✅ stocker la réponse
+      })
+      .addCase(nombreLotProduitParId.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+     .addCase(quantiteActuelProduitParId.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(quantiteActuelProduitParId.fulfilled, (state, action) => {
+        state.loading = false;
+        state.stateQuantiteActuelProduit = action.payload; // ✅ stocker la réponse
+      })
+      .addCase(quantiteActuelProduitParId.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      // .addCase(afficherInformationLotParProduit.pending, (state) => {
+      //   state.loading = true;
+      //   state.error = null;
+      // })
+      // .addCase(afficherInformationLotParProduit.fulfilled, (state, action) => {
+      //   state.loading = false;
+      //   state.stateProduitLot = action.payload.data || action.payload;
+      // })
+      // .addCase(afficherInformationLotParProduit.rejected, (state, action) => {
+      //   state.loading = false;
+      //   state.error = action.payload.data;
+      // });
     //  .addCase(modifierLotProduit.fulfilled, (state, action) => {
     //         const index = state.stateStructure.findIndex(
     //           (s) => s.id === action.payload.data.id

@@ -1,9 +1,8 @@
 // src/components/FormStructure.jsx
 //import BarcodeScanner from "./BarcodeScanner";
 function FromCategorieFournisseur({
- // niveau,
+  // niveau,
   libelle,
-
 
   onChangeLibelle,
 
@@ -14,7 +13,6 @@ function FromCategorieFournisseur({
   return (
     <form onSubmit={onSubmit}>
       <div className="form-row mb-2">
-
         <div className="mb-3 col-md-12 col-lg-12 col-sm-12">
           <label className="form-label">
             Libelle<span style={{ fontWeight: "bold", color: "red" }}>(*)</span>
@@ -27,8 +25,6 @@ function FromCategorieFournisseur({
             onChange={onChangeLibelle}
           />
         </div>
-  
-
         {/* <div className="mb-3 col-md-12 col-lg-12 col-sm-12">
           <BarcodeScanner codebarre={libelle} />
         </div> */}

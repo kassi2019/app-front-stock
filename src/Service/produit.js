@@ -281,9 +281,8 @@ export const quantiteActuelProduitParId = createAsyncThunk(
 
 export const ajouterLotProduit = createAsyncThunk(
   "lotProduit/ajouterlotProduit",
- 
+
   async (payload, thunkAPI) => {
-    
     try {
       const res = await api.post("/produit/creerLotProduit", payload);
 
@@ -292,6 +291,73 @@ export const ajouterLotProduit = createAsyncThunk(
     } catch (err) {
       return thunkAPI.rejectWithValue(
         err.response?.data || "Erreur lors de l'ajout de la categorie"
+      );
+    }
+  }
+);
+
+export const supprimerLotProduit = createAsyncThunk(
+  "deleteproduitlot/deleteproduitlot",
+  async (id, thunkAPI) => {
+    try {
+      const res = await api.delete(`/produit/supprimerLotProduit/${id}`);
+      // thunkAPI.dispatch(afficherInformationLotParProduit(id1));
+      return res.data; // On retourne l'ID supprimé pour le retirer du store
+    } catch (err) {
+      return thunkAPI.rejectWithValue(
+        err.response?.data || "Erreur lors de la suppression du produit"
+      );
+    }
+  }
+);
+
+
+
+export const ajouterProduitTemporellement = createAsyncThunk(
+  "temporel/temporel",
+  async ({codeProduit}, thunkAPI) => {
+    try {
+      // tu peux utiliser GET ou POST selon ton API
+      const res = await api.post(
+        `/produit/ajouterProduitTemporelParCode/${codeProduit}`
+      );
+      return res.data;
+    } catch (err) {
+      return thunkAPI.rejectWithValue(
+        err.response?.data || "Erreur lors de l'enregistrement du produit"
+      );
+    }
+  }
+);
+
+
+export const detailProduitParCode = createAsyncThunk(
+  "codeProduit/codeProduit",
+  async (codeprod, thunkAPI) => {
+    try {
+      const res = await api.get(`/produit/detailProduitParCode/${codeprod}`);
+      //   alert(res);
+      return res.data; // on ne garde que le tableau des utilisateurs
+    } catch (err) {
+      return thunkAPI.rejectWithValue(
+        err.response?.data ||
+          "Erreur lors de l'affichage"
+      );
+    }
+  }
+);
+
+
+export const supprimerProduitTemporel = createAsyncThunk(
+  "deleteproduitTemporel/deleteproduitTemporel",
+  async (id, thunkAPI) => {
+    try {
+      const res = await api.delete(`/produit/supprimerProduitTemporel/${id}`);
+
+      return res.data; // On retourne l'ID supprimé pour le retirer du store
+    } catch (err) {
+      return thunkAPI.rejectWithValue(
+        err.response?.data || "Erreur lors de la suppression du produit"
       );
     }
   }

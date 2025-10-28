@@ -21,6 +21,7 @@ import {
   quantiteActuelProduitParId,
   ajouterLotProduit,
   //   modifierStructure,
+  supprimerLotProduit,
   supprimerProduit,
 } from "../../Service/produit.js";
 import { listeFournisseur } from "../../Service/fournisseur.js";
@@ -34,7 +35,6 @@ export const useLogiqueProduit = () => {
     error,
     stateNombreLotProduit,
     stateQuantiteActuelProduit,
-    
   } = useSelector((state) => state.produits);
   const { stateFournisseur } = useSelector((state) => state.fournisseurs);
   const [editingId, setEditingId] = useState(null);
@@ -82,7 +82,7 @@ export const useLogiqueProduit = () => {
   //   }
   // };
   const handleChangeQuantite = (e) => setQuantiteLot1(e.target.value);
-  console.log({ stateFournisseur });
+
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setCode("");
@@ -224,12 +224,22 @@ export const useLogiqueProduit = () => {
     setUnitaire("");
     setEditingId(null);
   };
-  const confirmerSuppression = async (id) => {
-    console.log(id);
+  const confirmerSuppression = async (row) => {
     try {
-      await dispatch(supprimerProduit(id)).unwrap();
+      await dispatch(supprimerProduit(row)).unwrap();
       messageSucces("Suppression effectuée avec succès");
       setModalState({ ...modalState, show: false }); // Fermer le modal
+    } catch (error) {
+      messageErreur("Erreur lors de la suppression", error);
+    }
+  };
+
+  const confirmerSuppressionLot = async (row) => {
+    try {
+      await dispatch(supprimerLotProduit(row)).unwrap();
+      messageSucces("Suppression effectuée avec succès");
+      //setModalState({ ...modalState, show: false }); // Fermer le modal
+      setModalState2({ show: false });
     } catch (error) {
       messageErreur("Erreur lors de la suppression", error);
     }
@@ -265,6 +275,7 @@ export const useLogiqueProduit = () => {
   };
   // Ouvrir le modal Supprimer
   const handleSupprimer = (row) => {
+    console.log(row.id);
     setModalState({
       show: true,
       title: "Confirmer la suppression",
@@ -295,6 +306,36 @@ export const useLogiqueProduit = () => {
     });
   };
 
+  const handleSupprimerLot = (row) => {
+    setModalState({
+      show: true,
+      title: "Confirmer la suppression",
+      content: (
+        <div>
+          <p>
+            Voulez-vous vraiment supprimer le produit{" "}
+            <strong> {row.libelle}</strong> ?
+          </p>
+          <div className="d-flex justify-content-end">
+            {/* <button
+              type="button"
+              className="btn btn-secondary me-2"
+              onClick={handleCloseModal}
+            >
+              Annuler
+            </button> */}
+            <button
+              type="button"
+              className="btn btn-danger"
+              onClick={() => confirmerSuppressionLot(row.id)}
+            >
+              Supprimer
+            </button>
+          </div>
+        </div>
+      ),
+    });
+  };
   const handleDetail = async (row) => {
     try {
       // Appel API
@@ -406,36 +447,41 @@ export const useLogiqueProduit = () => {
               </thead>
               <tbody>
                 {lots.length > 0 ? (
-                  lots.map((lot, index) => (
-                    <tr key={lot.code_lot} style={{ textAlign: "center" }}>
-                      <td>{index + 1}</td>
-                      <td>{lot.code_lot}</td>
-                      <td>{formatDateFR(lot.expiration_date)}</td>
-                      <td style={{ textAlign: "right" }}>
-                        {separateurChiffre(lot.quantite)}
-                      </td>
-                      <td style={{ textAlign: "right" }}>
-                        {formatMontantDevise(lot.prix_achat)}
-                      </td>
+                  lots.map(
+                    (lot, index) => (
+                      console.log({ lot }),
+                      (
+                        <tr key={lot.code_lot} style={{ textAlign: "center" }}>
+                          <td>{index + 1}</td>
+                          <td>{lot.code_lot}</td>
+                          <td>{formatDateFR(lot.expiration_date)}</td>
+                          <td style={{ textAlign: "right" }}>
+                            {separateurChiffre(lot.quantite)}
+                          </td>
+                          <td style={{ textAlign: "right" }}>
+                            {formatMontantDevise(lot.prix_achat)}
+                          </td>
 
-                      {/* Boutons actions */}
-                      <td>
-                        <button
-                          className="btn btn-warning btn-sm"
-                          onClick={() => handleModifierLot(lot)}
-                          style={{ marginRight: "5px" }}
-                        >
-                          Modifier
-                        </button>
-                        <button
-                          className="btn btn-danger btn-sm"
-                          onClick={() => handleSupprimer(lot.code_lot)}
-                        >
-                          Supprimer
-                        </button>
-                      </td>
-                    </tr>
-                  ))
+                          {/* Boutons actions */}
+                          <td>
+                            <button
+                              className="btn btn-warning btn-sm"
+                              onClick={() => handleModifierLot(lot)}
+                              style={{ marginRight: "5px" }}
+                            >
+                              Modifier
+                            </button>
+                            <button
+                              className="btn btn-danger btn-sm"
+                              onClick={() => handleSupprimerLot(lot)}
+                            >
+                              Supprimer
+                            </button>
+                          </td>
+                        </tr>
+                      )
+                    )
+                  )
                 ) : (
                   <tr>
                     <td colSpan="6" style={{ textAlign: "center" }}>
@@ -614,7 +660,7 @@ export const useLogiqueProduit = () => {
     {
       key: "unitaire",
       title: "Unité",
-      width: "10%",
+      width: "8%",
     },
     {
       key: "code_barre",
@@ -633,25 +679,25 @@ export const useLogiqueProduit = () => {
     // },
     {
       label: "Ajouter Lot",
-      color: "green",
+      color: "yellow",
       // icon: Icons.edit,
       onClick: (row) => {
         handleAjouteLot(row);
       },
     },
     {
-      //label: "Voir Lot",
+      label: "Voir",
       title: "Voir Lot",
       color: "blue",
-      icon: Icons.view,
+      //  icon: Icons.view,
       onClick: (row) => {
         handleDetail(row);
       },
     },
     {
-      // label: "Supprimer",
+      label: "Supprimer",
       color: "red",
-      icon: Icons.delete,
+      //icon: Icons.delete,
       onClick: (row) => {
         handleSupprimer(row);
       },

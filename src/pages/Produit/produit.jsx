@@ -57,7 +57,7 @@ function Produit() {
   return (
     <div>
       <div className="d-flex justify-content-between align-items-center mb-3">
-        <h5 className="mb-0">Liste des Produits</h5>
+        <h5 className="mb-0">Liste des Produits ( {stateProduit.length} ) Produits</h5>
         <button className="btn btn-success" onClick={() => handleAjouter()}>
           + Ajouter Produit
         </button>

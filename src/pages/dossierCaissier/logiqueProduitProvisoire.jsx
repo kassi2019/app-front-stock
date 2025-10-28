@@ -1,7 +1,11 @@
 // logiqueProduitProvisoire.js
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { listeProduitProvisoire } from "../../Service/produit.js";
+import {
+  listeProduitProvisoire,
+  ajouterProduitTemporellement,
+  detailProduitParCode,
+} from "../../Service/produit.js";
 import { useSocketProduit } from "../../Service/useSocketProduit.js";
 import { ajouterProduitDeVendre } from "../../Service/vente.js";
 import {
@@ -17,14 +21,14 @@ export const useLogiqueProduitProvisoire = () => {
 
   // ✅ Montant reçu saisi par le caissier
   const [montantRecu, setMontantRecu] = useState(0);
-
+  const [codeProd, setCodeProduit] = useState("");
   // ✅ Total à payer = somme (prix * quantite)
   5000;
   const montantAPayer = stateProduitProvisoire.reduce(
     (acc, lot) => acc + lot.tb_produit.prix_unitaire * (lot.quantite || 0),
     0
   );
-
+  const handleChangeSetCodeProduit = (e) => setCodeProduit(e.target.value);
   // ✅ Monnaie rendu
   const monnaieRendu = montantRecu - montantAPayer;
 
@@ -59,6 +63,39 @@ export const useLogiqueProduitProvisoire = () => {
       //   console.error("Erreur d’enregistrement ❌", error);
     }
   };
+
+  const enregistrerProduitParCode = async (codeProd) => {
+    if (!codeProd || codeProd.trim() === "") {
+      messageErreur("Veuillez entrer un code produit !");
+      return;
+    }
+
+    try {
+      // 1️⃣ Récupérer le produit depuis backend via dispatch du thunk
+      const resultAction = await dispatch(detailProduitParCode(codeProd));
+
+      if (detailProduitParCode.fulfilled.match(resultAction)) {
+        const produit = resultAction.payload;
+
+        if (!produit) {
+          messageErreur("Produit introuvable !");
+          return;
+        }
+        // 2️⃣ Ajouter le produit temporairement
+        await dispatch(ajouterProduitTemporellement({ codeProduit: codeProd }));
+
+        // 3️⃣ Réinitialiser le champ input
+        setCodeProduit("");
+        messageSucces(`Produit "${produit.nom}" enregistré avec succès !`);
+      } else {
+        messageErreur("Produit introuvable ou erreur serveur !");
+      }
+    } catch (error) {
+      console.error(error);
+      messageErreur("Erreur lors de l'enregistrement du produit !");
+    }
+  };
+
   // ✅ Changer la quantité d’un produit précis
   const handleQuantiteChange = (id, nouvelleQuantite) => {
     dispatch(
@@ -77,5 +114,8 @@ export const useLogiqueProduitProvisoire = () => {
     monnaieRendu,
     handleQuantiteChange,
     handleValider,
+    codeProd,
+    handleChangeSetCodeProduit,
+    enregistrerProduitParCode,
   };
 };

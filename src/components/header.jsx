@@ -12,9 +12,9 @@ function Header() {
       navigate("/login"); // Redirection après déconnexion
     });
   };
-   useEffect(() => {
-      dispatch(informationUtilisateur());
-    }, [dispatch]);
+  useEffect(() => {
+    dispatch(informationUtilisateur());
+  }, [dispatch]);
   return (
     <div>
       <nav className="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
@@ -52,7 +52,6 @@ function Header() {
               </Link>
             </li>
             <li className="nav-item  d-none d-lg-flex">
-             
               <Link
                 to={`/PageTableauBord/${0}`}
                 className="nav-link"
@@ -205,23 +204,50 @@ function Header() {
             </li>
             <li className="nav-item nav-profile dropdown">
               <a
-                className="nav-link dropdown-toggle  pl-0 pr-0"
+                className="nav-link dropdown-toggle pl-0 pr-0 d-flex align-items-center"
                 href="#"
                 data-toggle="dropdown"
                 id="profileDropdown"
               >
-                <i className="typcn typcn-user-outline mr-0"></i>
-                <span
-                  className="nav-profile-name"
+                {/* <i
+                  className="typcn typcn-user-outline mr-2"
+                  style={{ fontSize: "25px" }}
+                ></i> */}
+
+                <div
                   style={{
-                    textTransform: "capitalize",
-                    color: "black",
-                    fontWeight: "bold",
+                    display: "flex",
+                    flexDirection: "column",
+                    lineHeight: "1.2",
                   }}
                 >
-                  {stateAllUtilisateur?.noms_prenoms}
-                </span>
+                  <span
+                    className="nav-profile-name"
+                    style={{
+                      textTransform: "capitalize",
+                      color: "black",
+                      fontWeight: "bold",
+                      fontSize: "18px",
+                    }}
+                  >
+                    {stateAllUtilisateur?.noms_prenoms}
+                  </span>
+
+                  <span
+                    className="nav-profile-role"
+                    style={{
+                      textTransform: "capitalize",
+                      color: "gray",
+                      fontSize: "14px",
+                      textAlign: "center",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    {stateAllUtilisateur?.role?.libelle}
+                  </span>
+                </div>
               </a>
+
               <div
                 className="dropdown-menu dropdown-menu-right navbar-dropdown"
                 aria-labelledby="profileDropdown"
@@ -230,8 +256,7 @@ function Header() {
                   <i className="typcn typcn-cog text-primary"></i> Mon Profil
                 </Link>
                 <Link onClick={handleLogout} className="dropdown-item">
-                  <i className="typcn typcn-power text-primary"></i>
-                  Déconnexion
+                  <i className="typcn typcn-power text-primary"></i> Déconnexion
                 </Link>
               </div>
             </li>

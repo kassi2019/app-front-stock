@@ -43,7 +43,7 @@ function FormLotProduit({
             <span style={{ fontWeight: "bold", color: "red" }}></span>
           </label>
           <input
-            type="text"
+            type="number"
             className="form-control"
             placeholder="Code du lot..."
             value={prixUnitaireProduit}
@@ -71,7 +71,7 @@ function FormLotProduit({
             <span style={{ fontWeight: "bold", color: "red" }}></span>
           </label>
           <input
-            type="text"
+            type="number"
             className="form-control"
             placeholder="Quantité..."
             value={quantiteLotProduit}
@@ -111,7 +111,7 @@ function FormLotProduit({
             <span style={{ fontWeight: "bold", color: "red" }}>(*)</span>
           </label>
           <input
-            type="text"
+            type="number"
             className="form-control"
             placeholder="Prix d'achat..."
             value={prixAchat}
@@ -121,7 +121,7 @@ function FormLotProduit({
         <div className="mb-3 col-md-6 col-lg-6 col-sm-6">
           <label className="form-label">
             Date d'expiration
-            <span style={{ fontWeight: "bold", color: "red" }}>(*)</span>
+            {/* <span style={{ fontWeight: "bold", color: "red" }}>(*)</span> */}
           </label>
           <input
             type="date"

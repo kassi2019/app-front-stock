@@ -1,11 +1,17 @@
 import React, { useState } from "react";
 import { useLogiqueProduitProvisoire } from "./logiqueProduitProvisoire";
 import { formatMontantDevise } from "../../globalComponents/Format";
-
+import { Modal, Button } from "react-bootstrap";
 import { Icons } from "../../globalComponents/Icons";
 import { useDispatch } from "react-redux";
-import { messageErreur, messageSucces } from "../../globalComponents/Notification";
-import { supprimerProduitTemporel } from "../../Service/produit";
+import {
+  messageErreur,
+  messageSucces,
+} from "../../globalComponents/Notification";
+import {
+  supprimerProduitsTemporelsCochet,
+  supprimerProduitTemporel,
+} from "../../Service/produit";
 function ListeProduitProvisoire() {
   const {
     stateProduitProvisoire,
@@ -18,57 +24,116 @@ function ListeProduitProvisoire() {
     codeProd,
     handleChangeSetCodeProduit,
     enregistrerProduitParCode,
-   
   } = useLogiqueProduitProvisoire();
 
- const dispatch = useDispatch();
+  const dispatch = useDispatch();
+  // --- État pour le modal de confirmation
   const [modalState, setModalState] = useState({
     show: false,
     title: "",
     content: null,
   });
+  const [selectedIds, setSelectedIds] = useState([]);
+  const handleCheckboxChange = (id) => {
+    setSelectedIds(
+      (prev) =>
+        prev.includes(id)
+          ? prev.filter((item) => item !== id) // décocher
+          : [...prev, id] // cocher
+    );
+  };
+  const handleSelectAll = (e) => {
+    if (e.target.checked) {
+      setSelectedIds(stateProduitProvisoire.map((lot) => lot.id));
+    } else {
+      setSelectedIds([]);
+    }
+  };
+  const handleCloseModal = () => {
+    setModalState({ ...modalState, show: false });
+  };
+  // --- Fonction appelée au clic sur "Supprimer"
   const handleSupprimer = (row) => {
-  console.log({ row });
     setModalState({
       show: true,
       title: "Confirmer la suppression",
       content: (
         <div>
           <p>
-            Voulez-vous vraiment supprimer
-            {/* <strong> {row.tb_produit.libelle}</strong> ? */}
+            Voulez-vous vraiment supprimer{" "}
+            <strong>{row.tb_produit.libelle}</strong> ?
           </p>
-          <div className="d-flex justify-content-end">
-            {/* <button
-              type="button"
-              className="btn btn-secondary me-2"
+          <div className="d-flex justify-content-end mt-3">
+            <Button
+              variant="secondary"
+              className="me-2"
               onClick={handleCloseModal}
             >
               Annuler
-            </button> */}
-            <button
-              type="button"
-              className="btn btn-danger"
+            </Button>
+            <Button
+              variant="danger"
               onClick={() => confirmerSuppression(row.id)}
             >
               Supprimer
-            </button>
+            </Button>
           </div>
         </div>
       ),
     });
   };
+  const handleSupprimerSelection = () => {
+    if (selectedIds.length < 2) {
+      messageErreur("Veuillez sélectionner au moins deux produits");
+      return;
+    }
 
-    const confirmerSuppression = async (id) => {
-    console.log({ id });
+    setModalState({
+      show: true,
+      title: "Confirmer l' annulation des produits",
+      content: (
+        <div>
+          <p>
+            Voulez-vous vraiment Annuler{" "}
+            <strong>{selectedIds.length} produit(s)</strong> sélectionné(s) ?
+          </p>
+          <div className="d-flex justify-content-end mt-3">
+            <Button
+              variant="secondary"
+              className="me-2"
+              onClick={handleCloseModal}
+            >
+              Annuler
+            </Button>
+            <Button variant="danger" onClick={confirmerSuppressionSelection}>
+              Confirmer
+            </Button>
+          </div>
+        </div>
+      ),
+    });
+  };
+  const confirmerSuppressionSelection = async () => {
     try {
-      await dispatch(supprimerProduitTemporel(id)).unwrap();
-      messageSucces("Suppression effectuée avec succès");
-      setModalState({ ...modalState, show: false }); // Fermer le modal
+      await dispatch(supprimerProduitsTemporelsCochet(selectedIds)).unwrap();
+      messageSucces("Annulation effectuée avec succès");
+      setSelectedIds([]); // vide la sélection après suppression
+      setModalState({ ...modalState, show: false });
     } catch (error) {
       messageErreur("Erreur lors de la suppression", error);
     }
   };
+
+  const confirmerSuppression = async (id) => {
+    try {
+      await dispatch(supprimerProduitTemporel(id)).unwrap();
+      messageSucces("Suppression effectuée avec succès");
+      setModalState({ ...modalState, show: false });
+    } catch (error) {
+      messageErreur("Erreur lors de la suppression", error);
+    }
+  };
+
   return (
     <div>
       <div
@@ -122,16 +187,24 @@ function ListeProduitProvisoire() {
             >
               N°
             </th>
-            {/* <th
+            <th
               style={{
                 border: "1px solid #000",
                 padding: 8,
-                width: "10%",
+                width: "2%",
                 textAlign: "center",
               }}
             >
-              Code Produit
-            </th> */}
+              <input
+                type="checkbox"
+                onChange={handleSelectAll}
+                checked={
+                  selectedIds.length > 0 &&
+                  selectedIds.length === stateProduitProvisoire.length
+                }
+              />
+            </th>
+
             <th
               style={{
                 border: "1px solid #000",
@@ -185,136 +258,144 @@ function ListeProduitProvisoire() {
             >
               Total Par produit
             </th>
-            <th
-              style={{
-                border: "1px solid #000",
-                padding: 8,
-                textAlign: "center",
-                width: "5%",
-                fontSize: "13px",
-              }}
-            >
-              Action
-            </th>
+            {stateProduitProvisoire.length > 0 && (
+              <th
+                style={{
+                  border: "1px solid #000",
+                  padding: 8,
+                  textAlign: "center",
+                  width: "5%",
+                  fontSize: "13px",
+                }}
+              >
+                Action
+              </th>
+            )}
           </tr>
         </thead>
 
         <tbody>
-          {stateProduitProvisoire.map(
-            (lot, index) => (
-              console.log({ lot }),
-              (
-                <tr
-                  key={lot.id}
-                  style={{
-                    backgroundColor:
-                      lot.quantite > lot.resteDisponible
-                        ? "#ffcccc"
-                        : "transparent", // 🔴 fond rouge clair si insuffisant
-                    border:
-                      lot.quantite > lot.resteDisponible
-                        ? "2px solid red"
-                        : "1px solid #000", // bordure rouge si insuffisant
-                  }}
-                >
-                  <td
-                    style={{
-                      border: "1px solid #000",
-                      padding: 8,
-                      textAlign: "center",
-                    }}
-                  >
-                    {index + 1}
-                  </td>
-                  {/* <td style={{ border: "1px solid #000", padding: 8 }}>
+          {stateProduitProvisoire.map((lot, index) => (
+            <tr
+              key={lot.id}
+              style={{
+                backgroundColor:
+                  lot.quantite > lot.resteDisponible
+                    ? "#ffcccc"
+                    : "transparent", // 🔴 fond rouge clair si insuffisant
+                border:
+                  lot.quantite > lot.resteDisponible
+                    ? "2px solid red"
+                    : "1px solid #000", // bordure rouge si insuffisant
+              }}
+            >
+              <td
+                style={{
+                  border: "1px solid #000",
+                  padding: 8,
+                  textAlign: "center",
+                }}
+              >
+                {index + 1}
+              </td>
+              <td
+                style={{
+                  border: "1px solid #000",
+                  textAlign: "center",
+                }}
+              >
+                <input
+                  type="checkbox"
+                  checked={selectedIds.includes(lot.id)}
+                  onChange={() => handleCheckboxChange(lot.id)}
+                />
+              </td>
+
+              {/* <td style={{ border: "1px solid #000", padding: 8 }}>
                 {lot.tb_produit.code}
               </td> */}
-                  <td style={{ border: "1px solid #000", padding: 8 }}>
-                    {lot.tb_produit.libelle}
-                  </td>
-                  <td
+              <td style={{ border: "1px solid #000", padding: 8 }}>
+                {lot.tb_produit.libelle}
+              </td>
+              <td
+                style={{
+                  border: "1px solid #000",
+                  padding: 8,
+                  textAlign: "right",
+                }}
+              >
+                {formatMontantDevise(lot.tb_produit.prix_unitaire)}
+              </td>
+              <td
+                style={{
+                  border: "1px solid #000",
+                  padding: 8,
+                  textAlign: "center",
+                }}
+              >
+                {lot.resteDisponible || 0}
+              </td>
+              <td
+                style={{
+                  border: "1px solid #000",
+                  padding: 8,
+                  textAlign: "right",
+                }}
+              >
+                {lot.resteDisponible < lot.quantite && (
+                  <span
                     style={{
-                      border: "1px solid #000",
-                      padding: 8,
-                      textAlign: "right",
+                      fontWeight: "bold",
+                      color: "red",
+                      fontSize: 12,
                     }}
                   >
-                    {formatMontantDevise(lot.tb_produit.prix_unitaire)}
-                  </td>
-                  <td
-                    style={{
-                      border: "1px solid #000",
-                      padding: 8,
-                      textAlign: "right",
-                    }}
-                  >
-                    {lot.resteDisponible || 0}
-                  </td>
-                  <td
-                    style={{
-                      border: "1px solid #000",
-                      padding: 8,
-                      textAlign: "right",
-                    }}
-                  >
-                    {lot.resteDisponible < lot.quantite && (
-                      <span
-                        style={{
-                          fontWeight: "bold",
-                          color: "red",
-                          fontSize: 12,
-                        }}
-                      >
-                        Qte disponible est insuffisante
-                      </span>
-                    )}
-                    <input
-                      type="number"
-                      value={lot.quantite ?? ""}
-                      onChange={(e) =>
-                        handleQuantiteChange(lot.id, e.target.value)
-                      }
-                      style={{
-                        width: "180px",
-                        textAlign: "right",
-                        padding: 5,
-                        border: "1px solid #000",
-                      }}
-                    />
-                  </td>
-                  <td
-                    style={{
-                      border: "1px solid #000",
-                      padding: 8,
-                      textAlign: "right",
-                    }}
-                  >
-                    {lot.tb_produit.prix_unitaire * lot.quantite}
-                  </td>
-                  <td
-                    style={{
-                      border: "1px solid #000",
-                      padding: 8,
-                      textAlign: "right",
-                    }}
-                  >
-                    <button
-                      className="btn btn-danger btn-sm"
-                      onClick={() => handleSupprimer(lot)}
-                      style={{ marginRight: "2px", padding: "4px 10px" }}
-                    >
-                      {Icons.delete}
-                    </button>
-                  </td>
-                </tr>
-              )
-            )
-          )}
+                    Qte disponible est insuffisante
+                  </span>
+                )}
+                <input
+                  type="number"
+                  value={lot.quantite ?? ""}
+                  onChange={(e) => handleQuantiteChange(lot.id, e.target.value)}
+                  style={{
+                    width: "180px",
+                    textAlign: "right",
+                    padding: 5,
+                    border: "1px solid #000",
+                  }}
+                />
+              </td>
+              <td
+                style={{
+                  border: "1px solid #000",
+                  padding: 8,
+                  textAlign: "right",
+                }}
+              >
+                {lot.tb_produit.prix_unitaire * lot.quantite}
+              </td>
+              <td
+                style={{
+                  border: "1px solid #000",
+                  padding: 8,
+                  textAlign: "right",
+                }}
+              >
+                <button
+                  className="btn btn-danger btn-sm"
+                  onClick={() => handleSupprimer(lot)}
+                  style={{ marginRight: "2px", padding: "4px 10px" }}
+                >
+                  {Icons.delete}
+                </button>
+              </td>
+            </tr>
+          ))}
 
           {/* Montant Reçu */}
           <tr>
             <td
-              colSpan={5}
+              colSpan={6}
               style={{
                 textAlign: "right",
                 padding: 8,
@@ -352,7 +433,7 @@ function ListeProduitProvisoire() {
           {/* Montant à payer */}
           <tr>
             <td
-              colSpan={5}
+              colSpan={6}
               style={{
                 textAlign: "right",
                 padding: 8,
@@ -379,7 +460,7 @@ function ListeProduitProvisoire() {
           {/* Monnaie rendu */}
           <tr>
             <td
-              colSpan={5}
+              colSpan={6}
               style={{
                 textAlign: "right",
                 padding: 8,
@@ -427,6 +508,7 @@ function ListeProduitProvisoire() {
         >
           Valider
         </button>
+
         <button
           style={{
             padding: "10px 20px",
@@ -436,10 +518,18 @@ function ListeProduitProvisoire() {
             borderRadius: "5px",
             cursor: "pointer",
           }}
+          onClick={handleSupprimerSelection}
         >
-          Annuler
+          Annuler Produit
         </button>
       </div>
+      {/* ✅ Modal de confirmation */}
+      <Modal show={modalState.show} onHide={handleCloseModal} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>{modalState.title}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>{modalState.content}</Modal.Body>
+      </Modal>
     </div>
   );
 }

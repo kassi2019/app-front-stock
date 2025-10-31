@@ -2,18 +2,18 @@ import React from "react";
 import Header from "./header.jsx";
 import HeaderMini from "./headerMini";
 // import Footer from "./footer";
-import { useEffect } from "react";
+//import { useEffect } from "react";
 
 import Milieu from "./milieu.jsx";
 function Parent() {
-  useEffect(() => {
-    const shouldReload = sessionStorage.getItem("shouldReloadHome");
+  // useEffect(() => {
+  //   const shouldReload = sessionStorage.getItem("shouldReloadHome");
 
-    if (shouldReload) {
-      sessionStorage.removeItem("shouldReloadHome");
-      window.location.reload();
-    }
-  }, []);
+  //   if (shouldReload) {
+  //     sessionStorage.removeItem("shouldReloadHome");
+  //     window.location.reload();
+  //   }
+  // }, []);
 
   return (
     <>
@@ -24,8 +24,7 @@ function Parent() {
           <div className="card-body">
             <Milieu />
           </div>
-              </div>
-              
+        </div>
       </div>
       {/* <Footer /> */}
     </>

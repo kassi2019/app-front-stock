@@ -186,6 +186,33 @@ function MenuGestionStock() {
                   Inventaire Validé
                 </Link>
               </li>
+               <li className="nav-item">
+                <Link
+                  to={`/inventaireValide/${1}`}
+                  className="nav-link"
+                  style={{ fontWeight: "bold" }}
+                >
+                  Rapport produit entré
+                </Link>
+              </li>
+                <li className="nav-item">
+                <Link
+                  to={`/inventaireValide/${1}`}
+                  className="nav-link"
+                  style={{ fontWeight: "bold" }}
+                >
+                  Rapport produit vendu
+                </Link>
+              </li>
+                <li className="nav-item">
+                <Link
+                  to={`/inventaireValide/${1}`}
+                  className="nav-link"
+                  style={{ fontWeight: "bold" }}
+                >
+                  Rapport produit en stock
+                </Link>
+              </li>
             </ul>
           </div>
         </li>

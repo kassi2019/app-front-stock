@@ -23,7 +23,7 @@ export const useLogiqueLogin = () => {
 
       sessionStorage.setItem("shouldReloadHome", "true");
       messageSucces("Connexion reussi");
-      navigate("/accueil2", { replace: true });
+      navigate(`/PageTableauBord/${1}`, { replace: true });
     } catch (err) {
       messageErreur("Échec de la connexion");
 

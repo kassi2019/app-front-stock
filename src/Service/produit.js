@@ -311,11 +311,9 @@ export const supprimerLotProduit = createAsyncThunk(
   }
 );
 
-
-
 export const ajouterProduitTemporellement = createAsyncThunk(
   "temporel/temporel",
-  async ({codeProduit}, thunkAPI) => {
+  async ({ codeProduit }, thunkAPI) => {
     try {
       // tu peux utiliser GET ou POST selon ton API
       const res = await api.post(
@@ -330,7 +328,6 @@ export const ajouterProduitTemporellement = createAsyncThunk(
   }
 );
 
-
 export const detailProduitParCode = createAsyncThunk(
   "codeProduit/codeProduit",
   async (codeprod, thunkAPI) => {
@@ -340,24 +337,38 @@ export const detailProduitParCode = createAsyncThunk(
       return res.data; // on ne garde que le tableau des utilisateurs
     } catch (err) {
       return thunkAPI.rejectWithValue(
-        err.response?.data ||
-          "Erreur lors de l'affichage"
+        err.response?.data || "Erreur lors de l'affichage"
       );
     }
   }
 );
-
 
 export const supprimerProduitTemporel = createAsyncThunk(
   "deleteproduitTemporel/deleteproduitTemporel",
   async (id, thunkAPI) => {
     try {
       const res = await api.delete(`/produit/supprimerProduitTemporel/${id}`);
-
+      thunkAPI.dispatch(listeProduitProvisoire());
       return res.data; // On retourne l'ID supprimé pour le retirer du store
     } catch (err) {
       return thunkAPI.rejectWithValue(
         err.response?.data || "Erreur lors de la suppression du produit"
+      );
+    }
+  }
+);
+export const supprimerProduitsTemporelsCochet = createAsyncThunk(
+  "deleteproduitTemporel/deleteMultiple",
+  async (ids, thunkAPI) => {
+    try {
+      const res = await api.delete(`/produit/multiple`, {
+        data: { ids }, // important : DELETE + body = data
+      });
+      thunkAPI.dispatch(listeProduitProvisoire());
+      return res.data; // tu peux aussi retourner ids pour maj du store
+    } catch (err) {
+      return thunkAPI.rejectWithValue(
+        err.response?.data || "Erreur lors de la suppression des produits"
       );
     }
   }

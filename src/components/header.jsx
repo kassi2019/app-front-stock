@@ -29,10 +29,7 @@ function Header() {
         </div>
         <div className="navbar-menu-wrapper d-flex align-items-center justify-content-end">
           <ul className="navbar-nav mr-lg-2">
-            <li className="nav-item  d-none d-lg-flex">
-              {/* <a className="nav-link" href="#">
-                Voir Module
-              </a> */}
+            {/* <li className="nav-item  d-none d-lg-flex">
               <Link
                 to={`/accueil2`}
                 className="nav-link"
@@ -40,7 +37,7 @@ function Header() {
               >
                 Voir Module
               </Link>
-            </li>
+            </li> */}
 
             <li className="nav-item  d-none d-lg-flex">
               <Link
@@ -62,12 +59,12 @@ function Header() {
             </li>
           </ul>
           <ul className="navbar-nav navbar-nav-right">
-            <li className="nav-item d-none d-lg-flex  mr-2">
+            {/* <li className="nav-item d-none d-lg-flex  mr-2">
               <a className="nav-link" href="#">
                 Help
               </a>
-            </li>
-            <li className="nav-item dropdown d-flex">
+            </li> */}
+            {/* <li className="nav-item dropdown d-flex">
               <a
                 className="nav-link count-indicator dropdown-toggle d-flex justify-content-center align-items-center"
                 id="messageDropdown"
@@ -137,8 +134,8 @@ function Header() {
                   </div>
                 </a>
               </div>
-            </li>
-            <li className="nav-item dropdown  d-flex">
+            </li> */}
+            {/* <li className="nav-item dropdown  d-flex">
               <a
                 className="nav-link count-indicator dropdown-toggle d-flex align-items-center justify-content-center"
                 id="notificationDropdown"
@@ -201,7 +198,7 @@ function Header() {
                   </div>
                 </a>
               </div>
-            </li>
+            </li> */}
             <li className="nav-item nav-profile dropdown">
               <a
                 className="nav-link dropdown-toggle pl-0 pr-0 d-flex align-items-center"

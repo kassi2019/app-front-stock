@@ -12,6 +12,7 @@ import EvolutionVentesMtParJour from "./EvolutionVentesMtParJour";
 import { useLogiqueTbCaissier } from "./logiqueTbCaissier";
 import { formatMontantDevise } from "../../../globalComponents/Format";
 import { useNavigate, useParams } from "react-router-dom";
+import PaiementParMode from "./paiementParMode";
 // import {
 //   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
 //   PieChart, Pie, Cell
@@ -258,6 +259,9 @@ const DashboardCaissier = () => {
 
         <div className="col-md-12 mb-4">
           <EvolutionVentesMtParJour />
+        </div>
+           <div className="col-md-12 mb-4">
+          <PaiementParMode />
         </div>
       </div>
       {/* 🪟 MODAL DYNAMIQUE */}

@@ -104,6 +104,16 @@ function MenuGestionStock() {
               </li>
               <li className="nav-item">
                 <Link
+                  to={`/modePaiement/${1}`}
+                  className="nav-link"
+                  style={{ fontWeight: "bold" }}
+                >
+                  Mode de Paiement
+                </Link>
+              </li>
+              
+              <li className="nav-item">
+                <Link
                   to={`/fournisseur/${1}`}
                   className="nav-link"
                   style={{ fontWeight: "bold" }}

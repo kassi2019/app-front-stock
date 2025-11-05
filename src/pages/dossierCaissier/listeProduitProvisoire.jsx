@@ -4,6 +4,7 @@ import { formatMontantDevise } from "../../globalComponents/Format";
 import { Modal, Button } from "react-bootstrap";
 import { Icons } from "../../globalComponents/Icons";
 import { useDispatch } from "react-redux";
+
 import {
   messageErreur,
   messageSucces,
@@ -12,8 +13,10 @@ import {
   supprimerProduitsTemporelsCochet,
   supprimerProduitTemporel,
 } from "../../Service/produit";
+import GlobalSelect from "../../globalComponents/GlobalSelect";
 function ListeProduitProvisoire() {
   const {
+    SelectModePaiement,
     stateProduitProvisoire,
     montantRecu,
     setMontantRecu,
@@ -24,6 +27,8 @@ function ListeProduitProvisoire() {
     codeProd,
     handleChangeSetCodeProduit,
     enregistrerProduitParCode,
+    handleChangeSelectModePaiement,
+    modePaiement,
   } = useLogiqueProduitProvisoire();
 
   const dispatch = useDispatch();
@@ -56,11 +61,11 @@ function ListeProduitProvisoire() {
   const handleSupprimer = (row) => {
     setModalState({
       show: true,
-      title: "Confirmer la suppression",
+      title: "Confirmer du retrait du produit",
       content: (
         <div>
           <p>
-            Voulez-vous vraiment supprimer{" "}
+            Voulez-vous vraiment Rétirer ce produit{" "}
             <strong>{row.tb_produit.libelle}</strong> ?
           </p>
           <div className="d-flex justify-content-end mt-3">
@@ -90,7 +95,7 @@ function ListeProduitProvisoire() {
 
     setModalState({
       show: true,
-      title: "Confirmer l' annulation des produits",
+      title: "Confirmer l'annulation des produits",
       content: (
         <div>
           <p>
@@ -127,10 +132,10 @@ function ListeProduitProvisoire() {
   const confirmerSuppression = async (id) => {
     try {
       await dispatch(supprimerProduitTemporel(id)).unwrap();
-      messageSucces("Suppression effectuée avec succès");
+      messageSucces("Produit retiré avec succès");
       setModalState({ ...modalState, show: false });
     } catch (error) {
-      messageErreur("Erreur lors de la suppression", error);
+      messageErreur("Erreur lors du retrait du produit", error);
     }
   };
 
@@ -145,7 +150,7 @@ function ListeProduitProvisoire() {
         }}
       >
         <p style={{ fontSize: "20px", fontWeight: "bold", margin: 0 }}>
-          Produit Sortant
+          Commande
         </p>
 
         <div
@@ -391,7 +396,36 @@ function ListeProduitProvisoire() {
               </td>
             </tr>
           ))}
-
+          {/* Mode de paiement */}
+          <tr>
+            <td
+              colSpan={6}
+              style={{
+                textAlign: "right",
+                padding: 8,
+                fontWeight: "bold",
+                border: "1px solid #000",
+                fontSize: "13px",
+              }}
+            >
+              Mode de paiement
+            </td>
+            <td
+              style={{
+                padding: 8,
+                // textAlign: "le",
+                fontWeight: "bold",
+                border: "1px solid #000",
+                fontSize: "13px",
+              }}
+            >
+              <GlobalSelect
+                options={SelectModePaiement}
+                value={modePaiement}
+                onChange={handleChangeSelectModePaiement}
+              />
+            </td>
+          </tr>
           {/* Montant Reçu */}
           <tr>
             <td
@@ -423,9 +457,11 @@ function ListeProduitProvisoire() {
                   padding: 5,
                   border: "1px solid #000",
                   fontSize: "13px",
+                  backgroundColor: modePaiement === 0 ? "#d3d3d3" : "#fff", // gris clair si 0
                 }}
                 value={montantRecu}
                 onChange={(e) => setMontantRecu(Number(e.target.value))}
+                disabled={modePaiement === 0}
               />
             </td>
           </tr>
@@ -498,17 +534,18 @@ function ListeProduitProvisoire() {
         <button
           style={{
             padding: "10px 20px",
-            backgroundColor: "#4CAF50",
-            color: "white",
+            backgroundColor: montantRecu === 0 ? "#ccc" : "#4CAF50", // gris si désactivé
+            color: montantRecu === 0 ? "#666" : "white", // texte gris si désactivé
             border: "none",
             borderRadius: "5px",
-            cursor: "pointer",
+            cursor: montantRecu === 0 ? "not-allowed" : "pointer", // curseur interdit si désactivé
+            //opacity: montantRecu !== 0 ? 0.7 : 1, // effet visuel plus doux
           }}
           onClick={handleValider}
+          disabled={montantRecu === 0} // bouton désactivé si montantRecu ≠ 0
         >
-          Valider
+          Valider Commande
         </button>
-
         <button
           style={{
             padding: "10px 20px",
@@ -520,7 +557,7 @@ function ListeProduitProvisoire() {
           }}
           onClick={handleSupprimerSelection}
         >
-          Annuler Produit
+          Annuler Commande
         </button>
       </div>
       {/* ✅ Modal de confirmation */}

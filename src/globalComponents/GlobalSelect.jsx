@@ -36,9 +36,9 @@ export default function GlobalSelect({
     <Select
       styles={customStyles}
       options={options}
-      value={options.find((opt) => opt.value === value)}
+      value={options?.find((opt) => opt.value === value)}
       onChange={(selected) => onChange(selected.value)}
-      placeholder={placeholder || "- Sélectionnez une option -"}
+      placeholder={placeholder || "- Sélectionnez-"}
       className="w-100"
     />
   );

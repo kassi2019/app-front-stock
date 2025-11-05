@@ -13,12 +13,13 @@ import {
   messageSucces,
 } from "../../globalComponents/Notification.js";
 import { updateQuantite } from "../../Store/Produit/produit.js";
+import { listeModePaiement } from "../../Service/modePaiement.js";
 export const useLogiqueProduitProvisoire = () => {
   const dispatch = useDispatch();
 
   // ✅ Produits depuis Redux
   const { stateProduitProvisoire } = useSelector((state) => state.produits);
-
+  const { SelectModePaiement } = useSelector((state) => state.modePaiement);
   // ✅ Montant reçu saisi par le caissier
   const [montantRecu, setMontantRecu] = useState(0);
   const [codeProd, setCodeProduit] = useState("");
@@ -29,22 +30,28 @@ export const useLogiqueProduitProvisoire = () => {
     0
   );
   const handleChangeSetCodeProduit = (e) => setCodeProduit(e.target.value);
+    const [modePaiement, setSelectModePaiement] = useState(0);
   // ✅ Monnaie rendu
   const monnaieRendu = montantRecu - montantAPayer;
 
   // Charger les produits
   useEffect(() => {
     dispatch(listeProduitProvisoire());
+    dispatch(listeModePaiement());
   }, [dispatch]);
 
   // Mise à jour temps réel
   useSocketProduit();
-
+ const handleChangeSelectModePaiement = (e) => {
+    const selectedId = e;
+    setSelectModePaiement(selectedId);
+  };
   const handleValider = async () => {
     const payload = {
       montant_recu: Number(montantRecu),
       montant_a_payer: Number(montantAPayer),
       monnaie_rendu: Number(monnaieRendu),
+      mode_paiement_id: Number(modePaiement),
       tb_vente_detail: stateProduitProvisoire.map((lot) => ({
         produit_id: Number(lot.tb_produit.id),
         quantite: Number(lot.quantite),
@@ -57,6 +64,7 @@ export const useLogiqueProduitProvisoire = () => {
     try {
       dispatch(ajouterProduitDeVendre(payload));
       setMontantRecu(0);
+      setSelectModePaiement(0);
       messageSucces("Vente enregistrée avec succès ✅");
     } catch (error) {
       messageErreur("Une erreur est survenue !", error);
@@ -108,6 +116,7 @@ export const useLogiqueProduitProvisoire = () => {
 
   return {
     stateProduitProvisoire,
+    SelectModePaiement,
     montantRecu,
     setMontantRecu,
     montantAPayer,
@@ -117,5 +126,7 @@ export const useLogiqueProduitProvisoire = () => {
     codeProd,
     handleChangeSetCodeProduit,
     enregistrerProduitParCode,
+    handleChangeSelectModePaiement,
+    modePaiement,
   };
 };

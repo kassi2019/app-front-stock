@@ -6,8 +6,8 @@ import { useDispatch, useSelector } from "react-redux";
 
 import {
   afficherResultatPan,
-  evolutionParJoursCaissier
-
+  evolutionParJoursCaissier,
+  EvolutionQteParJoursModePaiement,
 } from "../../../Service/tableauBord.js";
 export const useLogiqueTbCaissier = () => {
   const dispatch = useDispatch();
@@ -16,12 +16,14 @@ export const useLogiqueTbCaissier = () => {
   const {
     stateAffichePanCaissier,
     stateEvolutionVenduParJoursCaissier,
+    stateEvolutionQteVenduParModePaiement,
   } = useSelector((state) => state.tableauBordCaissier);
 
   // Charger les produits
   useEffect(() => {
     dispatch(afficherResultatPan());
     dispatch(evolutionParJoursCaissier());
+    dispatch(EvolutionQteParJoursModePaiement());
   }, [dispatch]);
 
   // ✅ Changer la quantité d’un produit précis
@@ -29,5 +31,6 @@ export const useLogiqueTbCaissier = () => {
   return {
     stateAffichePanCaissier,
     stateEvolutionVenduParJoursCaissier,
+    stateEvolutionQteVenduParModePaiement,
   };
 };

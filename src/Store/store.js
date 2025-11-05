@@ -5,6 +5,7 @@ import fournisseurReducer from "./Fournisseur/fournisseur";
 import categorieFournisseurReducer from "./CategorieFournisseur/categorieFournisseur";
 import tableauBordReducer from "./TableauBord/tableauBord";
 import tableauBordCaissierReducer from "./TbCaissier/TableauBordCaissier";
+import modePaiementReducer from "./ModePaiement/modePaiement";
 // import { setupListeners } from '@reduxjs/toolkit/query'
 // import { api } from '../Service/api'
 // import structureReducer from './Structure/structure'
@@ -23,6 +24,7 @@ export const store = configureStore({
     categorieFournisseurs: categorieFournisseurReducer,
     tableauBord: tableauBordReducer,
     tableauBordCaissier: tableauBordCaissierReducer,
+    modePaiement: modePaiementReducer,
     // [api.reducerPath]: api.reducer,
     // structures: structureReducer,
     // structuresPlans: planStructureReducer,

@@ -1,6 +1,6 @@
-// src/components/FormStructure.jsx
-//import BarcodeScanner from "./BarcodeScanner";
-function FromCategorieFournisseur({
+import React from "react";
+
+function FromModePaiement({
   // niveau,
   libelle,
   onChangeLibelle,
@@ -44,4 +44,4 @@ function FromCategorieFournisseur({
   );
 }
 
-export default FromCategorieFournisseur;
+export default FromModePaiement;

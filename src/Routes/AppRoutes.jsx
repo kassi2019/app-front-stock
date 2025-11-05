@@ -14,6 +14,7 @@ import ControleInventaire from "../pages/dossierResponsable/ControleInventaire";
 import InventaireValide from "../pages/dossierResponsable/InventaireValide";
 import CategorieFournisseur from "../pages/categorieFour/categorieFournisseur";
 import Fournisseur from "../pages/fournisseur/fournisseur";
+import ModePaiement from "../pages/modePaiement/modePaiement";
 // import Principal from "../components/principal";
 // import PrincipalPlan from "../pages/PlanStructure/PrincipalPlan";
 // import Role from "../pages/gestionUtilisateur/role/role";
@@ -50,6 +51,7 @@ const AppRoutes = () => {
           <Route path="inventaireValide/:module" element={<InventaireValide />} />
           <Route path="categorieFournisseur/:module" element={<CategorieFournisseur />} />
           <Route path="fournisseur/:module" element={<Fournisseur />} />
+          <Route path="modePaiement/:module" element={<ModePaiement />} />
           {/* <Route path="structure" element={<Structure />} />
           <Route path="planStructure" element={<PrincipalPlan />} />
           <Route path="role" element={<Role />} />

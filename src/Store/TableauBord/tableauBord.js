@@ -14,6 +14,7 @@ import {
   AfficherEvolutionVenteParJours,
   AfficherEvolutionVenteParMois,
   AfficherEvolutionVenteParAnnee,
+  EvolutionQteParJoursModePaiement,
 } from "../../Service/tableauBord.js";
 
 const tableauBordSlice = createSlice({
@@ -38,6 +39,8 @@ const tableauBordSlice = createSlice({
 
     stateEvolutionQteVenduParJoursCaissier: [],
     stateEvolutionMontantVenduParJoursCaissier: [],
+
+    stateEvolutionQteVenduParModePaiement: [],
 
     loading: false,
     error: null,
@@ -234,6 +237,20 @@ const tableauBordSlice = createSlice({
           action.payload.data || action.payload;
       })
       .addCase(AfficherEvolutionVenteParAnnee.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload.data;
+      })
+
+      .addCase(EvolutionQteParJoursModePaiement.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(EvolutionQteParJoursModePaiement.fulfilled, (state, action) => {
+        state.loading = false;
+        state.stateEvolutionQteVenduParModePaiement =
+          action.payload.data || action.payload;
+      })
+      .addCase(EvolutionQteParJoursModePaiement.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload.data;
       });

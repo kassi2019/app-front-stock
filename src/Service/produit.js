@@ -315,6 +315,7 @@ export const ajouterProduitTemporellement = createAsyncThunk(
   "temporel/temporel",
   async ({ codeProduit }, thunkAPI) => {
     try {
+     
       // tu peux utiliser GET ou POST selon ton API
       const res = await api.post(
         `/produit/ajouterProduitTemporelParCode/${codeProduit}`

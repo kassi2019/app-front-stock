@@ -30,7 +30,7 @@ export const useLogiqueProduitProvisoire = () => {
     0
   );
   const handleChangeSetCodeProduit = (e) => setCodeProduit(e.target.value);
-    const [modePaiement, setSelectModePaiement] = useState(0);
+  const [modePaiement, setSelectModePaiement] = useState(0);
   // ✅ Monnaie rendu
   const monnaieRendu = montantRecu - montantAPayer;
 
@@ -42,7 +42,7 @@ export const useLogiqueProduitProvisoire = () => {
 
   // Mise à jour temps réel
   useSocketProduit();
- const handleChangeSelectModePaiement = (e) => {
+  const handleChangeSelectModePaiement = (e) => {
     const selectedId = e;
     setSelectModePaiement(selectedId);
   };
@@ -62,10 +62,15 @@ export const useLogiqueProduitProvisoire = () => {
     };
 
     try {
-      dispatch(ajouterProduitDeVendre(payload));
-      setMontantRecu(0);
-      setSelectModePaiement(0);
-      messageSucces("Vente enregistrée avec succès ✅");
+      if (montantRecu < montantAPayer) {
+        messageErreur("Montant Récu est insuffisant !");
+        return;
+      } else {
+        dispatch(ajouterProduitDeVendre(payload));
+        setMontantRecu(0);
+        setSelectModePaiement(0);
+        messageSucces("Vente enregistrée avec succès ✅");
+      }
     } catch (error) {
       messageErreur("Une erreur est survenue !", error);
       //   console.error("Erreur d’enregistrement ❌", error);

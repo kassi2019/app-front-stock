@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import {
   afficherResultatPan,
   evolutionParJoursCaissier,
+  EvolutionQteParJoursModePaiement,
 } from "../../Service/tableauBord.js";
 
 const TableauBordCaissierSlice = createSlice({
@@ -9,6 +10,7 @@ const TableauBordCaissierSlice = createSlice({
   initialState: {
     stateAffichePanCaissier: [],
     stateEvolutionVenduParJoursCaissier: [],
+     stateEvolutionQteVenduParModePaiement: [],
     loading: false,
     error: null,
   },
@@ -40,6 +42,20 @@ const TableauBordCaissierSlice = createSlice({
           action.payload.data || action.payload;
       })
       .addCase(evolutionParJoursCaissier.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload.data;
+      })
+    
+    .addCase(EvolutionQteParJoursModePaiement.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(EvolutionQteParJoursModePaiement.fulfilled, (state, action) => {
+        state.loading = false;
+        state.stateEvolutionQteVenduParModePaiement =
+          action.payload.data || action.payload;
+      })
+      .addCase(EvolutionQteParJoursModePaiement.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload.data;
       });

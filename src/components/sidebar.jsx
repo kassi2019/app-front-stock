@@ -64,7 +64,7 @@ function Sidebar() {
             <div className="d-flex sidebar-profile">
               <div className="sidebar-profile-image">
                 <img
-                  src={photoPreview}
+                  src={photoPreview || null}
                   alt="image"
                   style={{ objectFit: "cover" }}
                 />

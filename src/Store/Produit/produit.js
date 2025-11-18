@@ -6,11 +6,13 @@ import {
   listeProduitValide,
   nombreLotProduitParId,
   quantiteActuelProduitParId,
+  updateLotsGlobal,
   //afficherInformationLotParProduit,
   //   ajouterStructure,
   //   modifierStructure,
   //   supprimerStructure,
 } from "../../Service/produit";
+import { messageErreur, messageSucces } from "../../globalComponents/Notification";
 
 const produitSlice = createSlice({
   name: "structures",
@@ -25,6 +27,8 @@ const produitSlice = createSlice({
     optionsSelect: [],
     loading: false,
     error: null,
+    ventes: [],
+    derniereVente: null,
   },
   reducers: {
     updateQuantite: (state, action) => {
@@ -41,6 +45,11 @@ const produitSlice = createSlice({
       if (produit) {
         produit.quantite_theorique = quantite_theorique; // ✅ met bien à jour uniquement ce produit
       }
+    },
+
+    addVente: (state, action) => {
+      state.ventes.push(action.payload);
+      state.derniereVente = action.payload; // utile pour le reçu
     },
   },
   extraReducers: (builder) => {
@@ -116,9 +125,7 @@ const produitSlice = createSlice({
         state.error = action.payload.data;
       })
 
-    
-    
-     .addCase(nombreLotProduitParId.pending, (state) => {
+      .addCase(nombreLotProduitParId.pending, (state) => {
         state.loading = true;
       })
       .addCase(nombreLotProduitParId.fulfilled, (state, action) => {
@@ -129,7 +136,7 @@ const produitSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
-     .addCase(quantiteActuelProduitParId.pending, (state) => {
+      .addCase(quantiteActuelProduitParId.pending, (state) => {
         state.loading = true;
       })
       .addCase(quantiteActuelProduitParId.fulfilled, (state, action) => {
@@ -140,18 +147,35 @@ const produitSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
-      // .addCase(afficherInformationLotParProduit.pending, (state) => {
-      //   state.loading = true;
-      //   state.error = null;
-      // })
-      // .addCase(afficherInformationLotParProduit.fulfilled, (state, action) => {
-      //   state.loading = false;
-      //   state.stateProduitLot = action.payload.data || action.payload;
-      // })
-      // .addCase(afficherInformationLotParProduit.rejected, (state, action) => {
-      //   state.loading = false;
-      //   state.error = action.payload.data;
-      // });
+
+      .addCase(updateLotsGlobal.pending, (state) => {
+        state.loading = true;
+        state.success = false;
+        state.error = null;
+      })
+      .addCase(updateLotsGlobal.fulfilled, (state) => {
+        state.loading = false;
+        //state.stateProduitInventaire = [];
+        messageSucces("Opération effectuée avec succès ✅");
+        state.success = true;
+      })
+      .addCase(updateLotsGlobal.rejected, (state, action) => {
+        state.loading = false;
+        messageErreur("Erreur d'enregistrement ❌");
+        state.error = action.payload;
+      });
+    // .addCase(afficherInformationLotParProduit.pending, (state) => {
+    //   state.loading = true;
+    //   state.error = null;
+    // })
+    // .addCase(afficherInformationLotParProduit.fulfilled, (state, action) => {
+    //   state.loading = false;
+    //   state.stateProduitLot = action.payload.data || action.payload;
+    // })
+    // .addCase(afficherInformationLotParProduit.rejected, (state, action) => {
+    //   state.loading = false;
+    //   state.error = action.payload.data;
+    // });
     //  .addCase(modifierLotProduit.fulfilled, (state, action) => {
     //         const index = state.stateStructure.findIndex(
     //           (s) => s.id === action.payload.data.id

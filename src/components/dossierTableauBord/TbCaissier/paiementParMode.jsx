@@ -43,7 +43,7 @@ function PaiementParMode() {
   return (
     <div className="card shadow-sm" ref={containerRef}>
       <div className="card-header bg-secondary text-white">
-        📊 Tendance Montant par mode de paiement par Jours
+        📊 Tendance Montant mobile money par Jours
       </div>
       <div className="card-body">
         <ResponsiveContainer width="100%" height={chartHeight}>

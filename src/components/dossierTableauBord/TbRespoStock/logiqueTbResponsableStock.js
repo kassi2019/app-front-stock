@@ -20,6 +20,7 @@ import {
   AfficherEvolutionVenteParMois,
   AfficherEvolutionVenteParAnnee
 } from "../../../Service/tableauBord.js";
+import { listeProduitInventaire } from "../../../Service/produit.js";
 export const useLogiqueTbResponsableStock = () => {
   const dispatch = useDispatch();
 
@@ -37,7 +38,7 @@ export const useLogiqueTbResponsableStock = () => {
     stateDetailQuantiteQuantiteDetruite,
     stateDetailQuantiteQuantiteNonDetruite,
   } = useSelector((state) => state.tableauBord);
-
+const { stateProduitInventaire } = useSelector((state) => state.produits);
   // Charger les produits
   useEffect(() => {
     dispatch(afficherQteDisponible());
@@ -54,6 +55,7 @@ export const useLogiqueTbResponsableStock = () => {
     dispatch(AfficherEvolutionVenteParJours());
     dispatch(AfficherEvolutionVenteParMois());
     dispatch(AfficherEvolutionVenteParAnnee());
+    dispatch(listeProduitInventaire());
   }, [dispatch]);
 
   // ✅ Changer la quantité d’un produit précis
@@ -70,5 +72,6 @@ export const useLogiqueTbResponsableStock = () => {
     stateDetailQuantiteExpirationAujourdHui,
     stateDetailQuantiteQuantiteDetruite,
     stateDetailQuantiteQuantiteNonDetruite,
+    stateProduitInventaire,
   };
 };

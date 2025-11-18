@@ -20,6 +20,7 @@ import Graphe6MontantQuotidienneAnnee from "./graphe6MontantQuotidienneAnnee";
 import Graphe4MontantQuotidienneJrs from "./graphe4MontantQuotidienneJrs";
 import Graphe8MontantQuotidienneMois from "./graphe8MontantQuotidienneMois";
 import Graphe7QteQuotidienneMois from "./graphe7QteQuotidienneMois";
+
 const DashboardResponsable = () => {
   const {
     stateQteDisponible,
@@ -33,12 +34,14 @@ const DashboardResponsable = () => {
     stateDetailQuantiteExpirationAujourdHui,
     stateDetailQuantiteQuantiteDetruite,
     stateDetailQuantiteQuantiteNonDetruite,
+    stateProduitInventaire
   } = useLogiqueTbResponsableStock();
   // État pour la période sélectionnée
   const [periode, setPeriode] = useState("jour");
 
   const [showModal, setShowModal] = useState(false);
   const [modalData, setModalData] = useState({ title: "", value: 0 });
+  
   const [modalContent, setModalContent] = useState([]);
   const handleOpenModal = (title, value) => {
     setModalData({ title, value });
@@ -75,7 +78,7 @@ const DashboardResponsable = () => {
 
     setShowModal(true);
   };
-
+console.log({stateProduitInventaire})
   const handleCloseModal = () => setShowModal(false);
   // const dataPertes = [
   //   { produit: "Paracétamol", pertes: 20, expiration: 10 },
@@ -255,6 +258,7 @@ const DashboardResponsable = () => {
       {/* Indicateurs (KPI Cards) */}
 
       {/* Tableau des mouvements en attente */}
+    {stateProduitInventaire.length > 0 && (
       <div className="card mb-4 shadow-sm">
         <div className="card-header bg-primary text-white">
           Produit à valider
@@ -263,7 +267,7 @@ const DashboardResponsable = () => {
           <ControleInventaire />
         </div>
       </div>
-
+    )}
       {/* Tableau des produits expirés */}
 
       {/* Graphiques */}

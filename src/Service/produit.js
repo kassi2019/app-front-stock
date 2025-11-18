@@ -201,10 +201,10 @@ export const listeProduitValide = createAsyncThunk(
 
 export const mettreAJourQuantiteTheorique = createAsyncThunk(
   "produit/mettreAJourQuantiteTheorique",
-  async ({ idlot, quantiteLot }, thunkAPI) => {
+  async ({ idlot, valeurradio, quantiteTheorique }, thunkAPI) => {
     try {
       const res = await api.get(
-        `/produit/miseAjourQuantite/${idlot}/${quantiteLot}`
+        `/produit/miseAjourQuantite/${idlot}/${valeurradio}/${quantiteTheorique}`
       );
 
       // recharger la liste des produits après mise à jour
@@ -371,6 +371,31 @@ export const supprimerProduitsTemporelsCochet = createAsyncThunk(
       return thunkAPI.rejectWithValue(
         err.response?.data || "Erreur lors de la suppression des produits"
       );
+    }
+  }
+);
+
+
+export const updateLotsGlobal = createAsyncThunk(
+  "inventaire/updateLotsGlobal",
+  async (lots, { dispatch, rejectWithValue }) => {
+    try {
+      const res = await api.post("/produit/update-multiple", {
+        lots,
+      });
+
+      // Dispatch correct de l'action pour rafraîchir la liste
+      dispatch(listeProduitInventaire());
+
+      return res.data;
+    } catch (error) {
+      const message =
+        error.response?.data?.message ||
+        error.response?.data ||
+        error.message ||
+        "Une erreur est survenue";
+
+      return rejectWithValue(message);
     }
   }
 );

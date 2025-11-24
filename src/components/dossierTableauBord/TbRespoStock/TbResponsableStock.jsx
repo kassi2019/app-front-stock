@@ -78,7 +78,7 @@ const DashboardResponsable = () => {
 
     setShowModal(true);
   };
-console.log({stateProduitInventaire})
+
   const handleCloseModal = () => setShowModal(false);
   // const dataPertes = [
   //   { produit: "Paracétamol", pertes: 20, expiration: 10 },

@@ -25,6 +25,7 @@ const produitSlice = createSlice({
     stateProduitValide: [],
     stateProduitLot: [],
     optionsSelect: [],
+    optionsSelectProduit:[],
     loading: false,
     error: null,
     ventes: [],
@@ -66,6 +67,11 @@ const produitSlice = createSlice({
           value: item.id, // ou item.niveau
           label: item.libelle,
           niveau: item.niveau,
+        }));
+        state.optionsSelectProduit = action.payload.data.map((item) => ({
+          value: item.id, // ou item.niveau
+          label: item.code + " - " + item.libelle + " ( " + item.unitaire + " )",
+          code:item.code
         }));
         // Adjust based on your API response structure
       })

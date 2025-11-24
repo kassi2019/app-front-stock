@@ -25,10 +25,13 @@ function ListeProduitProvisoire() {
     handleQuantiteChange,
     handleValider,
     codeProd,
-    handleChangeSetCodeProduit,
+    //handleChangeSetCodeProduit,
     enregistrerProduitParCode,
     handleChangeSelectModePaiement,
     modePaiement,
+    optionsSelectProduit,
+    handleChangeSelectProduit,
+    produit,
   } = useLogiqueProduitProvisoire();
 
   const dispatch = useDispatch();
@@ -160,18 +163,27 @@ function ListeProduitProvisoire() {
             gap: "5px", // espace entre l’input et le bouton
           }}
         >
+          <GlobalSelect
+            options={optionsSelectProduit}
+            onChange={handleChangeSelectProduit}
+            value={produit}
+            placeholder="Produit"
+            style={{ width: "200px" }}
+          />
           <input
             type="text"
             className="form-control"
             placeholder="Rechercher un produit..."
-            style={{ width: "800px" }}
+            style={{ width: "500px" }}
             value={codeProd}
-            onChange={handleChangeSetCodeProduit}
+            //onChange={handleChangeSetCodeProduit}
+            disabled
           />
 
           <button
             className="btn btn-primary btn-sm"
             onClick={() => enregistrerProduitParCode(codeProd)}
+            style={{ width: "400px" }}
           >
             <i className="bi bi-arrow-clockwise me-1"></i>
             Ajouter Produit

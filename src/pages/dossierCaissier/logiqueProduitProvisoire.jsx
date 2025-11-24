@@ -8,6 +8,7 @@ import {
 } from "../../Service/produit.js";
 import { useSocketProduit } from "../../Service/useSocketProduit.js";
 import { ajouterProduitDeVendre } from "../../Service/vente.js";
+import { listeProduit } from "../../Service/produit.js";
 import {
   messageErreur,
   messageSucces,
@@ -18,7 +19,7 @@ export const useLogiqueProduitProvisoire = () => {
   const dispatch = useDispatch();
 
   // ✅ Produits depuis Redux
-  const { stateProduitProvisoire } = useSelector((state) => state.produits);
+  const { stateProduitProvisoire, optionsSelectProduit } = useSelector((state) => state.produits);
   const { SelectModePaiement } = useSelector((state) => state.modePaiement);
   // ✅ Montant reçu saisi par le caissier
   const [montantRecu, setMontantRecu] = useState(0);
@@ -29,15 +30,45 @@ export const useLogiqueProduitProvisoire = () => {
     (acc, lot) => acc + lot.tb_produit.prix_unitaire * (lot.quantite || 0),
     0
   );
-  const handleChangeSetCodeProduit = (e) => setCodeProduit(e.target.value);
+
+
   const [modePaiement, setSelectModePaiement] = useState(0);
+  const [produit, setSelectProduit] = useState(0);
   // ✅ Monnaie rendu
   const monnaieRendu = montantRecu - montantAPayer;
+  // const codeProduit = optionsSelectProduit.find(
+  //   (data) =>
+  //     data.value === produit
+
+  // );
+  const findProduit = (produit) => {
+    return optionsSelectProduit.find(
+      (item) => String(item.value) === String(produit)
+    ) || null;
+  };
+  const handleChangeSelectProduit = (produit) => {
+    const item = findProduit(produit);
+
+    if (!item) {
+      setCodeProduit("");
+      return;
+    }
+
+    setCodeProduit(item.code);
+  };
+
+  // const handleChangeSelectProduit = (e) => {
+  //   const selectedId = e;
+  //   setSelectProduit(selectedId);
+  // };
+  // const handleChangeSetCodeProduit = (e) => setCodeProduit(codeProduit?.code);
 
   // Charger les produits
   useEffect(() => {
     dispatch(listeProduitProvisoire());
     dispatch(listeModePaiement());
+    dispatch(listeProduit())
+
   }, [dispatch]);
 
   // Mise à jour temps réel
@@ -46,6 +77,7 @@ export const useLogiqueProduitProvisoire = () => {
     const selectedId = e;
     setSelectModePaiement(selectedId);
   };
+
   const handleValider = async () => {
     const payload = {
       montant_recu: Number(montantRecu),
@@ -129,9 +161,12 @@ export const useLogiqueProduitProvisoire = () => {
     handleQuantiteChange,
     handleValider,
     codeProd,
-    handleChangeSetCodeProduit,
+    //handleChangeSetCodeProduit,
     enregistrerProduitParCode,
     handleChangeSelectModePaiement,
+    handleChangeSelectProduit,
+    produit,
     modePaiement,
+    optionsSelectProduit
   };
 };

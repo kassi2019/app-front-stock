@@ -18,7 +18,7 @@ export const useLogiqueTbCaissier = () => {
     stateEvolutionVenduParJoursCaissier,
     stateEvolutionQteVenduParModePaiement,
   } = useSelector((state) => state.tableauBordCaissier);
-console.log(stateEvolutionQteVenduParModePaiement);
+
   // Charger les produits
   useEffect(() => {
     dispatch(afficherResultatPan());

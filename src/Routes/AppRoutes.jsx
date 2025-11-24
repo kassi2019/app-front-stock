@@ -15,6 +15,7 @@ import InventaireValide from "../pages/dossierResponsable/InventaireValide";
 import CategorieFournisseur from "../pages/categorieFour/categorieFournisseur";
 import Fournisseur from "../pages/fournisseur/fournisseur";
 import ModePaiement from "../pages/modePaiement/modePaiement";
+import ProduitEnVente from "../pages/Produit/ProduitEnVente";
 // import Principal from "../components/principal";
 // import PrincipalPlan from "../pages/PlanStructure/PrincipalPlan";
 // import Role from "../pages/gestionUtilisateur/role/role";
@@ -40,7 +41,7 @@ const AppRoutes = () => {
           <Route path="tableauBord" element={<TableauBord />} />
           <Route path="/produit/:module" element={<Produit />} />
           <Route path="PageTableauBord/:module" element={<PageTableauBord />} />
-          
+
           {/* to={`/fromProfil/${module}`} */}
           <Route
             path="listeProduitProvisoire/:module"
@@ -52,6 +53,7 @@ const AppRoutes = () => {
           <Route path="categorieFournisseur/:module" element={<CategorieFournisseur />} />
           <Route path="fournisseur/:module" element={<Fournisseur />} />
           <Route path="modePaiement/:module" element={<ModePaiement />} />
+          <Route path="produitEnVente/:module" element={<ProduitEnVente />} />
           {/* <Route path="structure" element={<Structure />} />
           <Route path="planStructure" element={<PrincipalPlan />} />
           <Route path="role" element={<Role />} />
